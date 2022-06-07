@@ -3,6 +3,19 @@
         "quotes": [
             "error",
             "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-var": [
+            "error"
+        ],
+        "camelcase": [
+            "error",
+            {
+                "properties": "always"
+            }
         ]
     }
 }
