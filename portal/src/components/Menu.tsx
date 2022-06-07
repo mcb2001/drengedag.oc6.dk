@@ -1,18 +1,35 @@
-import { faHome, faSoccerBall } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faSoccerBall, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 function Menu() {
     return (
         <div className="menu">
-            <a className="menu-item" href="/">
-                <FontAwesomeIcon icon={faHome} />
+            <NavLink
+                className="menu-item"
+                to="/">
+                <FontAwesomeIcon
+                    icon={faHome}
+                    className="menu-item-icon" />
                 Forside
-            </a>
-            <a className="menu-item" href="/bold">
-                <FontAwesomeIcon icon={faSoccerBall} />
-                Bold
-            </a>
+            </NavLink>
+            <NavLink
+                className="menu-item"
+                to="/teams">
+                <FontAwesomeIcon
+                    icon={faSoccerBall}
+                    className="menu-item-icon" />
+                Teams
+            </NavLink>
+            <NavLink
+                className="menu-item"
+                to="/players">
+                <FontAwesomeIcon
+                    icon={faUsers}
+                    className="menu-item-icon" />
+                Spillere
+            </NavLink>
         </div>
     );
 }

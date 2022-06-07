@@ -1,9 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles/stylesheet.scss";
-import { App } from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { } from "./util/ArrayExtensions";
+import { Router } from "./routing";
+import { DefaultLayout } from "./components";
+import { App } from "./App";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,5 +15,5 @@ root.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode >
 );

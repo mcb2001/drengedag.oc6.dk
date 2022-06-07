@@ -1,13 +1,12 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { FrontPage } from "../pages/FrontPage";
-import { BoldPage } from "../pages/BoldPage";
+import { FrontPage, TeamsPage, PlayersPage } from "../pages";
 
-export function Router(props: React.PropsWithChildren<{}>) {
+export function Router() {
     return (
         <Routes>
             <Route path="/" element={<FrontPage />} />
-            <Route path="/bold" element={<BoldPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/players" element={<PlayersPage />} />
         </Routes>
     );
 }

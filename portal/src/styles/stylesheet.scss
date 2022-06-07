@@ -29,13 +29,22 @@ body,
 
 .app {
     display: grid;
-    grid-template-rows: auto 2rem;
+    grid-template-rows: auto 3rem;
     grid-template-columns: 100%;
 
     .content {
         width: 100%;
         padding: 5px;
         overflow-y: scroll;
+
+        .players {
+            .player {
+                display: inline-block;
+                box-shadow: 0.1rem 0.1rem 0.3rem black;
+                margin: 10px;
+                padding: 10px;
+            }
+        }
     }
 
     .menu {
@@ -48,7 +57,11 @@ body,
             display: inline-block;
             text-decoration: none;
             color: #ffffff;
-            font-size: 1.5rem;
+            font-size: 2rem;
+
+            .menu-item-icon {
+                margin-right: 0.5rem;
+            }
         }
     }
 }
