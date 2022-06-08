@@ -1,36 +1,33 @@
 import React from "react";
 import { PlayerContext } from "../App";
 import { useDocTitle } from "../util";
-import { PlayerView } from "../components";
+import { EditablePlayerForm } from "../components";
+import { Player } from "../models";
 
 function PlayersPage() {
     useDocTitle("Spillere");
 
-    const [name, setName] = React.useState<string>("");
-
     return (
         <PlayerContext.Consumer>
-            {({ players, addPlayer }) => {
+            {({ players, addPlayer, updatePlayer }) => {
+                function submit(player: Player) {
+                    if (player.id === 0) {
+                        return addPlayer(player);
+                    }
+                    else {
+                        updatePlayer(player);
+                        return false;
+                    }
+                }
+
                 return (
                     <div className="players">
                         <h1>Spillere</h1>
-                        <div>
-                            <label>
-                                Navn:
-                                <input
-                                    type="text"
-                                    value={name}
-                                    onChange={(event) => setName(event.target.value)} />
-                            </label>
-                            <button
-                                type="button"
-                                onClick={() => addPlayer(name)}>
-                                Tilføj
-                            </button>
-                        </div>
-                        {players.map((player, index) => <PlayerView
-                            player={player}
-                            key={index} />)}
+                        {[{ id: 0, name: "" }, ...players].sort((a, b) => a.id - b.id).map((player) =>
+                            <EditablePlayerForm
+                                submit={(player: Player) => submit(player)}
+                                player={player}
+                                key={player.id} />)}
                     </div>
                 );
             }}

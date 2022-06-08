@@ -7,7 +7,6 @@ interface IProps {
 function PlayerView(props: IProps) {
     const { player: { name } } = props;
 
-
     return (
         <div className="player">
             {name}
