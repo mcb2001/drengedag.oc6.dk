@@ -4,7 +4,7 @@ const useDocTitle = (title: string) => {
     const [docTitle, setDoctitle] = React.useState<string>(title);
 
     React.useEffect(() => {
-        document.title = docTitle;
+        document.title = docTitle + " - oc6";
     }, [docTitle]);
 
     return [docTitle, setDoctitle];
