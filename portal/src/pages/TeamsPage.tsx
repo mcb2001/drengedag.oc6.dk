@@ -1,7 +1,7 @@
 import React from "react";
 import { Random } from "../util/Random";
 import { useDocTitle } from "../util";
-import { PlayerContext } from "../App";
+import { PlayerContextConsumer } from "../contexts";
 import { PlayerView } from "../components";
 
 function TeamsPage() {
@@ -34,7 +34,7 @@ function TeamsPage() {
     }
 
     return (
-        <PlayerContext.Consumer>
+        <PlayerContextConsumer>
             {({ players, addPlayer }) => {
                 return (
                     <div className="players">
@@ -43,7 +43,7 @@ function TeamsPage() {
                     </div>
                 );
             }}
-        </PlayerContext.Consumer>
+        </PlayerContextConsumer>
     );
 }
 

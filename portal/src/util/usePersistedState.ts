@@ -6,6 +6,7 @@ function usePersistedState<T>(
     init: boolean = false,
     validate: (t: T) => boolean = t => true): [T, React.Dispatch<React.SetStateAction<T>>] {
     const [state, setState] = React.useState<T>(initital);
+    const [isInitialized, setIsInitialized] = React.useState<boolean>(false);
 
     const setPersistedState: React.Dispatch<React.SetStateAction<T>> = (value: React.SetStateAction<T>) => {
         setState(value);
@@ -13,7 +14,7 @@ function usePersistedState<T>(
     };
 
     React.useEffect(() => {
-        if (init) {
+        if (init && !isInitialized) {
             const newStateString = window.localStorage.getItem(persistanceKey);
 
             if (newStateString) {
@@ -21,12 +22,13 @@ function usePersistedState<T>(
 
                 if (newState) {
                     if (validate(newState)) {
+                        setIsInitialized(!isInitialized);
                         setState(newState);
                     }
                 }
             }
         }
-    }, [state]);
+    }, [state, isInitialized]);
 
     return [state, setPersistedState];
 }
