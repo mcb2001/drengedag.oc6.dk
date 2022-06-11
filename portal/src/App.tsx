@@ -33,10 +33,6 @@ function App() {
             <DefaultLayout>
                 <DefaultToastContainer />
                 <Router />
-                <p>
-                    {user?.email}
-                </p>
-                <hr />
                 <textarea
                     rows={20}
                     cols={100}

@@ -17,8 +17,7 @@ root.render(
       domain="oc6.eu.auth0.com"
       clientId="chPM83h1wb4RHlVWcgzL9dr5INn5e3D9"
       redirectUri={window.location.origin}
-      audience="https://api.drengedag.oc6.dk"
-    >
+      audience="https://api.drengedag.oc6.dk">
       <BrowserRouter>
         <App />
       </BrowserRouter>

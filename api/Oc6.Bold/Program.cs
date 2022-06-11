@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Oc6.Bold.Data;
+using Oc6.Bold.Policies;
+using Oc6.Bold.Services;
 
 namespace Oc6.Bold
 {
@@ -73,6 +75,10 @@ namespace Oc6.Bold
                 options.Authority = authority;
                 options.Audience = audience;
             });
+
+            services.AddAdminPolicyAuthorization();
+
+            services.AddSingleton<NameService>();
 
             services.AddLogging(config => config.AddConsole());
 
