@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Oc6.Bold.Data;
+using Oc6.Bold.Middleware;
 
 namespace Oc6.Bold
 {
@@ -25,7 +29,38 @@ namespace Oc6.Bold
 
             services.AddEndpointsApiExplorer();
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "You api title", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Bearer token auth",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                      new OpenApiSecurityScheme
+                      {
+                        Reference = new OpenApiReference
+                          {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                          },
+                          Scheme = "oauth2",
+                          Name = "Bearer",
+                          In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                      }
+                    });
+            });
 
             string authority = configuration.GetSection(Auth0SectionKey)["Authority"];
             string audience = configuration.GetSection(Auth0SectionKey)["Audience"];
@@ -40,6 +75,12 @@ namespace Oc6.Bold
                 options.Audience = audience;
             });
 
+            services.AddLogging(config => config.AddConsole());
+
+            services.AddDbContext<BoldContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(BoldContext))));
+
+            services.AddScoped<UserContext>();
+
             return services;
         }
 
@@ -53,9 +94,11 @@ namespace Oc6.Bold
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
-            app.UseAuthentication();
+            app.UseMiddleware<IdentityLoader>();
 
             app.MapControllers();
         }

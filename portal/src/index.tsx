@@ -6,14 +6,22 @@ import { } from "./util/ArrayExtensions";
 import { Router } from "./routing";
 import { DefaultLayout } from "./components";
 import { App } from "./App";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Auth0Provider
+      domain="oc6.eu.auth0.com"
+      clientId="chPM83h1wb4RHlVWcgzL9dr5INn5e3D9"
+      redirectUri={window.location.origin}
+      audience="https://api.drengedag.oc6.dk"
+    >
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Auth0Provider>
   </React.StrictMode >
 );
