@@ -40,7 +40,7 @@ function App() {
                 <textarea
                     rows={20}
                     cols={100}
-                    value={"Bearer " + accessToken} />
+                    value={accessToken ? "Bearer " + accessToken : ""} />
             </DefaultLayout>
         </PlayerContextProvider>
     );

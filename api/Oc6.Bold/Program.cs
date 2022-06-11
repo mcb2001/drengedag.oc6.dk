@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Oc6.Bold.Data;
-using Oc6.Bold.Middleware;
 
 namespace Oc6.Bold
 {
@@ -79,8 +78,6 @@ namespace Oc6.Bold
 
             services.AddDbContext<BoldContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(BoldContext))));
 
-            services.AddScoped<UserContext>();
-
             return services;
         }
 
@@ -97,8 +94,6 @@ namespace Oc6.Bold
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseMiddleware<IdentityLoader>();
 
             app.MapControllers();
         }

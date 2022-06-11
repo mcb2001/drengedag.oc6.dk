@@ -13,7 +13,6 @@ namespace Oc6.Bold.Data
     {
         public DbSet<Player> Players { get; set; }
 
-
         public BoldContext(DbContextOptions<BoldContext> options)
 
             : base(options)
@@ -25,7 +24,9 @@ namespace Oc6.Bold.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            var player = modelBuilder.Entity<Player>();
 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(BoldContext).Assembly);
         }
     }
 #pragma warning restore CS8618 // Non-nullable
