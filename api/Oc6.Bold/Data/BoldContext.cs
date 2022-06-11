@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Oc6.Bold.Models;
+using Oc6.Bold.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +13,10 @@ namespace Oc6.Bold.Data
     {
         public DbSet<Player> Players { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamPlayer> TeamPlayers { get; set; }
+        public DbSet<Game> Games { get; set; }
 
         public BoldContext(DbContextOptions<BoldContext> options)
-
             : base(options)
         {
 
@@ -24,8 +25,6 @@ namespace Oc6.Bold.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            var player = modelBuilder.Entity<Player>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BoldContext).Assembly);
         }

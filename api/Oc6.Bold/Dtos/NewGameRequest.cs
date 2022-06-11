@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oc6.Bold.Models
+namespace Oc6.Bold.Dtos
 {
-    public record PlayerDto(int Id, string Name, string Email, string? Auth0UserId);
+    public record NewGameRequest(string Name, IEnumerable<int> participantIds);
 }

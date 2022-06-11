@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Oc6.Bold.Models;
+using Oc6.Bold.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Oc6.Bold.Data
+namespace Oc6.Bold.Data.Config
 {
-    public class PlayerConfiguration : IEntityTypeConfiguration<Player>
+    public class PlayerConfiguration : AbstractConfigurations<Player>
     {
-        public void Configure(EntityTypeBuilder<Player> builder)
+        public override void Configure(EntityTypeBuilder<Player> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -30,9 +30,6 @@ namespace Oc6.Bold.Data
             builder.Property(x => x.Email)
                 .HasMaxLength(DataDefaults.MaxStringLength)
                 .IsRequired(true);
-
-            builder.HasMany(x => x.Teams)
-                .WithMany(x => x.Players);
         }
     }
 }

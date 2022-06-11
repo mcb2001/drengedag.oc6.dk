@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Oc6.Bold.Data;
-using Oc6.Bold.Models;
+using Oc6.Bold.Dtos;
+using Oc6.Bold.Data.Models;
 using Oc6.Bold.Policies;
 using Oc6.Bold.Services;
 using System.Linq.Expressions;
@@ -16,8 +17,6 @@ namespace Oc6.Bold.Controllers
     {
         private readonly BoldContext dbContext;
         private readonly NameService nameService;
-        private static readonly Expression<Func<Player, PlayerDto>> AsDto = p => new(p.Id, p.Name, p.Email, p.Auth0UserId);
-        private static readonly Func<Player, PlayerDto> ToDto = AsDto.Compile();
 
         public PlayerController(BoldContext dbContext, NameService nameService)
         {
@@ -31,7 +30,9 @@ namespace Oc6.Bold.Controllers
         {
             if (await dbContext.Players
                 .AsNoTracking()
-                .SingleOrDefaultAsync(p => p.Id == id) is Player player)
+                .Where(p => p.Id == id)
+                .Select(p => new PlayerDto(p.Id, p.Name, p.Email, p.Auth0UserId))
+                .SingleOrDefaultAsync() is PlayerDto player)
             {
                 return Ok(player);
             }
@@ -44,7 +45,7 @@ namespace Oc6.Bold.Controllers
         {
             return await dbContext.Players
                 .AsNoTracking()
-                .Select(AsDto)
+                .Select(p => new PlayerDto(p.Id, p.Name, p.Email, p.Auth0UserId))
                 .ToListAsync();
         }
 
@@ -72,7 +73,7 @@ namespace Oc6.Bold.Controllers
                 .Where(x => x.Auth0UserId == auth0Id)
                 .SingleOrDefaultAsync() is Player playerWithMatchingAuth0Id)
             {
-                return Ok(ToDto(playerWithMatchingAuth0Id));
+                return Ok(new PlayerDto(playerWithMatchingAuth0Id.Id, playerWithMatchingAuth0Id.Name, playerWithMatchingAuth0Id.Email, playerWithMatchingAuth0Id.Auth0UserId));
             }
 
             if (await dbContext.Players
@@ -83,7 +84,7 @@ namespace Oc6.Bold.Controllers
                 playerWithEmailAndNotAuth0Id.Auth0UserId = auth0Id;
                 await dbContext.SaveChangesAsync();
 
-                return Ok(ToDto(playerWithEmailAndNotAuth0Id));
+                return Ok(new PlayerDto(playerWithEmailAndNotAuth0Id.Id, playerWithEmailAndNotAuth0Id.Name, playerWithEmailAndNotAuth0Id.Email, playerWithEmailAndNotAuth0Id.Auth0UserId));
             }
 
             return Ok(await Post(new(
@@ -135,7 +136,7 @@ namespace Oc6.Bold.Controllers
 
             await dbContext.SaveChangesAsync();
 
-            return ToDto(player);
+            return new(player.Id, player.Name, player.Email, player.Auth0UserId);
         }
 
         [HttpPut]
@@ -148,7 +149,7 @@ namespace Oc6.Bold.Controllers
 
                 await dbContext.SaveChangesAsync();
 
-                return Ok(ToDto(player));
+                return Ok(new PlayerDto(player.Id, player.Name, player.Email, player.Auth0UserId));
             }
 
             return NotFound();
