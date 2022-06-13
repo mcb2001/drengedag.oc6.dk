@@ -13,22 +13,19 @@ namespace Oc6.Bold.Data.Config
     {
         public override void Configure(EntityTypeBuilder<Player> builder)
         {
-            builder.HasKey(x => x.Id);
+            SetDefaults(builder);
 
             builder.HasIndex(x => x.Auth0UserId)
                 .IsUnique();
             builder.Property(x => x.Auth0UserId)
-                .HasMaxLength(DataDefaults.MaxStringLength)
                 .IsRequired(false);
 
             builder.Property(x => x.Name)
-                .HasMaxLength(DataDefaults.MaxStringLength)
                 .IsRequired(true);
 
             builder.HasIndex(x => x.Email)
                 .IsUnique();
             builder.Property(x => x.Email)
-                .HasMaxLength(DataDefaults.MaxStringLength)
                 .IsRequired(true);
         }
     }
