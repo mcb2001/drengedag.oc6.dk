@@ -26,6 +26,7 @@ function App() {
 
     if (!isLoading && !isAuthenticated) {
         loginWithRedirect();
+        return <h1>Logging in...</h1>;
     }
 
     return (

@@ -30,7 +30,9 @@ namespace Oc6.Bold.Controllers
                 .AsNoTracking()
                 .Where(g => g.Id == id)
                 .Select(g => new GameDto(g.Id, g.Name,
-                    g.Teams.Select(t => new TeamDto(t.TeamPlayers.Select(tp => new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId))))))
+                    g.Teams.Select(t =>
+                        new TeamDto(t.TeamPlayers.Select(tp =>
+                            new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId))))))
                 .SingleOrDefaultAsync() is GameDto game)
             {
                 return Ok(game);
@@ -45,7 +47,9 @@ namespace Oc6.Bold.Controllers
             return await dbContext.Games
                 .AsNoTracking()
                 .Select(g => new GameDto(g.Id, g.Name,
-                    g.Teams.Select(t => new TeamDto(t.TeamPlayers.Select(tp => new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId))))))
+                    g.Teams.Select(t =>
+                        new TeamDto(t.TeamPlayers.Select(tp =>
+                            new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId))))))
                 .ToListAsync();
         }
 

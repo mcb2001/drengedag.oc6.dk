@@ -32,7 +32,7 @@ namespace Oc6.Bold
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "You api title", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Oc6 Drengedag", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

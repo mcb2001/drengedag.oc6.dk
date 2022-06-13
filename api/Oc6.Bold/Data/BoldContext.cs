@@ -12,8 +12,11 @@ namespace Oc6.Bold.Data
     public class BoldContext : DbContext
     {
         public DbSet<Game> Games { get; set; }
+
         public DbSet<Team> Teams { get; set; }
+
         public DbSet<TeamPlayer> TeamPlayers { get; set; }
+
         public DbSet<Player> Players { get; set; }
 
         public BoldContext(DbContextOptions<BoldContext> options)
