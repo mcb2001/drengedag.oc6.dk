@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Oc6.Bold.Dtos
 {
-    public record NewGameRequest(string Name, int TeamCount, List<int> participantIds);
+    public record NewGameRequest(string Name, int TeamCount, List<int> ParticipantIds);
 }

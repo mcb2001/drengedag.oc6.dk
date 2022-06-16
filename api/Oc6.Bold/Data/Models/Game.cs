@@ -11,6 +11,8 @@ namespace Oc6.Bold.Data.Models
     {
         public int Id { get; set; }
 
+        public bool IsActive { get; set; }
+
         public string Name { get; set; }
 
         public List<Team> Teams { get; set; }

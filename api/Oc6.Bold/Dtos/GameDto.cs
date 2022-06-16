@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace Oc6.Bold.Dtos
 {
-    public record GameDto(int Id, string Name, IEnumerable<TeamDto> Teams);
+    public record GameDto(int Id, string Name, bool IsActive, IEnumerable<TeamDto> Teams);
 }

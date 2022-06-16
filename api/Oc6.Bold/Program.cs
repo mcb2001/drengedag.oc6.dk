@@ -84,6 +84,10 @@ namespace Oc6.Bold
 
             services.AddDbContext<BoldContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(BoldContext))));
 
+            services.AddScoped<GameService>();
+
+            services.AddScoped<PlayerService>();
+
             return services;
         }
 

@@ -16,89 +16,29 @@ namespace Oc6.Bold.Controllers
     [Route("[controller]")]
     public class GameController : ControllerBase
     {
-        private readonly BoldContext dbContext;
+        private readonly GameService gameService;
 
-        public GameController(BoldContext dbContext)
+        public GameController(GameService gameService)
         {
-            this.dbContext = dbContext;
+            this.gameService = gameService;
         }
 
         [HttpGet("{id}")]
         [ProducesDefaultResponseType(typeof(PlayerDto))]
-        public async Task<IActionResult> Get([FromRoute] int id)
-        {
-            if (await dbContext.Games
-                .AsNoTracking()
-                .Where(g => g.Id == id)
-                .Select(g => new GameDto(g.Id, g.Name,
-                    g.Teams.Select(t =>
-                        new TeamDto(t.TeamPlayers.Select(tp =>
-                            new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId))))))
-                .SingleOrDefaultAsync() is GameDto game)
-            {
-                return Ok(game);
-            }
-
-            return NotFound();
-        }
+        public async Task<GameDto> Get([FromRoute] int id) =>
+            await gameService.GetByIdAsync(id);
 
         [HttpGet]
-        public async Task<IEnumerable<GameDto>> Get()
-        {
-            return await dbContext.Games
-                .AsNoTracking()
-                .Select(g => new GameDto(g.Id, g.Name,
-                    g.Teams.Select(t =>
-                        new TeamDto(t.TeamPlayers.Select(tp =>
-                            new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId))))))
-                .ToListAsync();
-        }
+        public async Task<IEnumerable<GameDto>> Get() =>
+            await gameService.GetAsync();
 
         [HttpPost]
         [AdminPolicyAuthorize]
-        public async Task<GameDto> Post([FromBody] NewGameRequest request)
-        {
-            var participants = request.participantIds;
+        public async Task<GameDto> Post([FromBody] NewGameRequest request) =>
+            await gameService.CreateAsync(request.Name, request.TeamCount, request.ParticipantIds);
 
-            participants.Shuffle();
-
-            List<List<int>> teams = Enumerable.Range(0, request.TeamCount)
-                .Select(_ => new List<int>())
-                .ToList();
-
-            int team = 0;
-
-            foreach (var participant in participants)
-            {
-                teams[team].Add(participant);
-                team = (team + 1) % request.TeamCount;
-            }
-
-            Game game = new Game
-            {
-                Name = request.Name,
-                Teams = teams.Select(team => new Team
-                {
-                    Points = 0,
-                    TeamPlayers = team.Select(playerId => new TeamPlayer
-                    {
-                        PlayerId = playerId,
-                    }).ToList(),
-                }).ToList()
-            };
-
-            dbContext.Games.Add(game);
-
-            await dbContext.SaveChangesAsync();
-
-            return await dbContext.Games
-                .AsNoTracking()
-                .Where(g => g.Id == game.Id)
-                .Select(g =>
-                    new GameDto(g.Id, g.Name, g.Teams.Select(team =>
-                      new TeamDto(team.TeamPlayers.Select(teamPlayer =>
-                          new PlayerDto(teamPlayer.Player.Id, teamPlayer.Player.Name, teamPlayer.Player.Email, teamPlayer.Player.Auth0UserId))))))
-                .SingleAsync();
-        }
+        [HttpPut]
+        public async Task<GameDto> FinishGame([FromBody] FinishGameRequest request) =>
+            await gameService.FinishGameAsync(request.GameId, request.TeamIds);
     }
 }
