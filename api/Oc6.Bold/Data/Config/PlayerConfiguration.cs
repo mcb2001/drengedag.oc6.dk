@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Oc6.Bold.Data.Config
 {
-    public class PlayerConfiguration : AbstractConfigurations<Player>
+    public class PlayerConfiguration : IEntityTypeConfiguration<Player>
     {
-        public override void Configure(EntityTypeBuilder<Player> builder)
+        public void Configure(EntityTypeBuilder<Player> builder)
         {
-            SetDefaults(builder);
+            builder.HasKey(x => x.Id);
 
             builder.HasIndex(x => x.Auth0UserId)
                 .IsUnique();

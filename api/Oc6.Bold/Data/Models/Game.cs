@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 namespace Oc6.Bold.Data.Models
 {
 #pragma warning disable CS8618 // Non-nullable
-    public class Game : DbModelObject
+    public class Game
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public List<Team> Teams { get; set; }

@@ -7,6 +7,7 @@ using Oc6.Bold.Data.Models;
 using Oc6.Bold.Policies;
 using Oc6.Bold.Services;
 using System.Linq.Expressions;
+using Oc6.Bold.Util;
 
 namespace Oc6.Bold.Controllers
 {
@@ -57,7 +58,47 @@ namespace Oc6.Bold.Controllers
         [AdminPolicyAuthorize]
         public async Task<GameDto> Post([FromBody] NewGameRequest request)
         {
-            return await Task.FromException<GameDto>(new NotImplementedException());
+            var participants = request.participantIds;
+
+            participants.Shuffle();
+
+            List<List<int>> teams = Enumerable.Range(0, request.TeamCount)
+                .Select(_ => new List<int>())
+                .ToList();
+
+            int team = 0;
+
+            foreach (var participant in participants)
+            {
+                teams[team].Add(participant);
+                team = (team + 1) % request.TeamCount;
+            }
+
+            Game game = new Game
+            {
+                Name = request.Name,
+                Teams = teams.Select(team => new Team
+                {
+                    Points = 0,
+                    TeamPlayers = team.Select(playerId => new TeamPlayer
+                    {
+                        PlayerId = playerId,
+                    }).ToList(),
+                }).ToList()
+            };
+
+            dbContext.Games.Add(game);
+
+            await dbContext.SaveChangesAsync();
+
+            return await dbContext.Games
+                .AsNoTracking()
+                .Where(g => g.Id == game.Id)
+                .Select(g =>
+                    new GameDto(g.Id, g.Name, g.Teams.Select(team =>
+                      new TeamDto(team.TeamPlayers.Select(teamPlayer =>
+                          new PlayerDto(teamPlayer.Player.Id, teamPlayer.Player.Name, teamPlayer.Player.Email, teamPlayer.Player.Auth0UserId))))))
+                .SingleAsync();
         }
     }
 }

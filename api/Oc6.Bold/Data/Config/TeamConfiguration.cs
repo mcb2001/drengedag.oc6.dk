@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Oc6.Bold.Data.Config
 {
-    public class TeamConfiguration : AbstractConfigurations<Team>
+    public class TeamConfiguration : IEntityTypeConfiguration<Team>
     {
-        public override void Configure(EntityTypeBuilder<Team> builder)
+        public void Configure(EntityTypeBuilder<Team> builder)
         {
-            SetDefaults(builder);
+            builder.HasKey(x => x.Id);
 
             builder.HasOne(x => x.Game)
                 .WithMany(x => x.Teams)

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Oc6.Bold.Data.Config
 {
-    public class TeamPlayerConfiguration : AbstractConfigurations<TeamPlayer>
+    public class TeamPlayerConfiguration : IEntityTypeConfiguration<TeamPlayer>
     {
-        public override void Configure(EntityTypeBuilder<TeamPlayer> builder)
+        public void Configure(EntityTypeBuilder<TeamPlayer> builder)
         {
             builder.HasKey(x => new { x.PlayerId, x.TeamId });
 

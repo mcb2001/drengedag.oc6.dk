@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Oc6.Bold.Data.Config
 {
-    public class GameConfiguration : AbstractConfigurations<Game>
+    public class GameConfiguration : IEntityTypeConfiguration<Game>
     {
-        public override void Configure(EntityTypeBuilder<Game> builder)
+        public void Configure(EntityTypeBuilder<Game> builder)
         {
-            SetDefaults(builder);
+            builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name)
                 .IsRequired();
