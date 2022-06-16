@@ -37,7 +37,7 @@ namespace Oc6.Bold.Controllers
         public async Task<GameDto> Post([FromBody] NewGameRequest request) =>
             await gameService.CreateAsync(request.Name, request.TeamCount, request.ParticipantIds);
 
-        [HttpPut]
+        [HttpPut("finish")]
         public async Task<GameDto> FinishGame([FromBody] FinishGameRequest request) =>
             await gameService.FinishGameAsync(request.GameId, request.TeamIds);
     }

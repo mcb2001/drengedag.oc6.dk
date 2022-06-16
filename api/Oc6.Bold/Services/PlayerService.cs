@@ -48,11 +48,10 @@ namespace Oc6.Bold.Services
                 .ThenInclude(x => x.Team)
                 .ThenInclude(x => x.Game)
                 .Where(x => x.Auth0UserId == auth0Id)
-                .SingleOrDefaultAsync() is Player playerWithMatchingAuth0Id)
+                .Select(x=>x.Id)
+                .SingleOrDefaultAsync() is int playerId)
             {
-                return new PlayerDto(playerWithMatchingAuth0Id.Id, playerWithMatchingAuth0Id.Name, playerWithMatchingAuth0Id.Email, playerWithMatchingAuth0Id.Auth0UserId,
-                    playerWithMatchingAuth0Id.TeamPlayers.Where(x => !x.Team.Game.IsActive).Sum(x => x.Team.Points),
-                    playerWithMatchingAuth0Id.TeamPlayers.Where(x => x.Team.Points == 1).Count());
+                return await GetByIdAsync(playerId);
             }
 
             if (await context.Players

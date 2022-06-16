@@ -82,7 +82,9 @@ namespace Oc6.Bold
 
             services.AddLogging(config => config.AddConsole());
 
-            services.AddDbContext<BoldContext>(options => options.UseSqlServer(configuration.GetConnectionString(nameof(BoldContext))));
+            services.AddDbContext<BoldContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString(nameof(BoldContext)), config =>
+                    config.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddScoped<GameService>();
 
