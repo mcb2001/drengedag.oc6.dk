@@ -91,7 +91,7 @@ namespace Oc6.Bold.Services
                     .Where(x => x.Id == teamIds[i])
                     .Single();
 
-                team.Points += (i + 1); //1 for a win, 2 for second, 3 for third...
+                team.Points = (i + 1); //1 for a win, 2 for second, 3 for third...
             }
 
             await context.SaveChangesAsync();
