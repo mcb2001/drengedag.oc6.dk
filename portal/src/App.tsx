@@ -1,10 +1,7 @@
 import React from "react";
-import { Player } from "./models";
 import { DefaultLayout, DefaultToastContainer } from "./components";
 import { Router } from "./routing";
 import { useAuth0 } from "@auth0/auth0-react";
-
-import { PlayerContextProvider } from "./contexts";
 
 function App() {
     const { loginWithRedirect, isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
@@ -24,22 +21,23 @@ function App() {
         getJwt();
     }, [accessToken, getAccessTokenSilently]);
 
+    const showLoading: () => JSX.Element = () => <h1>Logging in...</h1>;
+
     if (!isLoading && !isAuthenticated) {
         loginWithRedirect();
-        return <h1>Logging in...</h1>;
+        return showLoading();
+    }
+
+    if (!accessToken) {
+        return showLoading();
     }
 
     return (
-        <PlayerContextProvider>
-            <DefaultLayout>
-                <DefaultToastContainer />
-                <Router />
-                <textarea
-                    rows={20}
-                    cols={100}
-                    value={accessToken ? "Bearer " + accessToken : ""} />
-            </DefaultLayout>
-        </PlayerContextProvider>
+        <DefaultLayout>
+            <DefaultToastContainer />
+            <Router accessToken={accessToken} />
+
+        </DefaultLayout>
     );
 }
 

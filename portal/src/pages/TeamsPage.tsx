@@ -1,49 +1,11 @@
 import React from "react";
-import { Random } from "../util/Random";
-import { useDocTitle } from "../util";
-import { PlayerContextConsumer } from "../contexts";
-import { PlayerView } from "../components";
+import Oc6 from "../oc6";
 
 function TeamsPage() {
-    const [items, setItems] = React.useState<Array<number>>([]);
-
-    useDocTitle("Spil");
-
-    React.useEffect(() => {
-        if (items.length === 0) {
-            const newItems: Array<number> = [];
-
-            for (let i = 0; i < 100; ++i) {
-                newItems.push(Random.next(0, 1000));
-            }
-
-            setItems(newItems);
-        }
-    }, [items]);
-
-    function shuffle() {
-        const newItems = [...items];
-        newItems.shuffle();
-        setItems(newItems);
-    }
-
-    function sort() {
-        const newItems = [...items];
-        newItems.sort((a, b) => a - b);
-        setItems(newItems);
-    }
+    Oc6.useDocTitle("Hold");
 
     return (
-        <PlayerContextConsumer>
-            {({ players, addPlayer }) => {
-                return (
-                    <div className="players">
-                        <h1>Teams</h1>
-                        {players.map((player, index) => <PlayerView player={player} key={index} />)}
-                    </div>
-                );
-            }}
-        </PlayerContextConsumer>
+        <h1>Hold</h1>
     );
 }
 

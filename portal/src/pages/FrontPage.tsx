@@ -1,11 +1,11 @@
 import React from "react";
-import { useDocTitle } from "../util";
+import Oc6 from "../oc6";
 
 function FrontPage(): JSX.Element {
-    useDocTitle("Forside");
+    Oc6.useDocTitle("Forside");
 
     return (
-        <h1>Front page</h1>
+        <h1>Forside</h1>
     );
 }
 

@@ -1,17 +1,15 @@
 import React from "react";
-import { Menu } from "./";
+import { Menu } from "./Menu";
 
-function DefaultLayout(props: React.PropsWithChildren<{}>) {
+export function DefaultLayout(props: React.PropsWithChildren<{}>) {
     const { children } = props;
 
     return (
-            <div className="app">
-                < Menu />
-                <div className="content" >
-                    {children}
-                </div>
+        <div className="app">
+            < Menu />
+            <div className="content" >
+                {children}
             </div>
+        </div>
     );
 }
-
-export { DefaultLayout };

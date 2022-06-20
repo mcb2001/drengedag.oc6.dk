@@ -13,7 +13,7 @@ namespace Oc6.Bold.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class GameController : ControllerBase
     {
         private readonly GameService gameService;

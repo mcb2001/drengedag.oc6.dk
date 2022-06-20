@@ -12,7 +12,7 @@ namespace Oc6.Bold.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PlayerController : ControllerBase
     {
         private readonly PlayerService playerService;
@@ -30,8 +30,8 @@ namespace Oc6.Bold.Controllers
         public async Task<IEnumerable<PlayerDto>> Get() =>
             await playerService.GetAsync();
 
-        [HttpGet("me")]
-        public async Task<PlayerDto> Me() =>
+        [HttpGet("self")]
+        public async Task<PlayerDto> Self() =>
             await playerService.GetOrCreateSelf(
                 User.Claims
                     .Where(x => x.Type.Contains("nameidentifier"))

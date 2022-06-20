@@ -2,9 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles/stylesheet.css";
 import { BrowserRouter } from "react-router-dom";
-import { } from "./util/ArrayExtensions";
-import { Router } from "./routing";
-import { DefaultLayout } from "./components";
 import { App } from "./App";
 import { Auth0Provider } from "@auth0/auth0-react";
 

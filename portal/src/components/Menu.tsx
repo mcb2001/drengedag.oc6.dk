@@ -1,10 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { faHome, faSoccerBall, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faHome, faSoccerBall, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-function Menu() {
+export function Menu() {
     const { logout } = useAuth0();
 
     return (
@@ -33,11 +33,17 @@ function Menu() {
                     className="menu-item-icon" />
                 Spillere
             </NavLink>
+            <NavLink
+                className="menu-item"
+                to="/debuginfo">
+                <FontAwesomeIcon
+                    icon={faCogs}
+                    className="menu-item-icon" />
+                DebugInfo
+            </NavLink>
             <button onClick={() => logout()}>
                 Logout
             </button>
         </div>
     );
 }
-
-export { Menu };
