@@ -26,16 +26,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    },
-    "Oc6.Bold Windows Terminal": {
-      "commandName": "Executable",
-      "executablePath": ".\\Oc6.Bold.exe",
-      "commandLineArgs": "&& start https://localhost:5001/swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "sqlDebugging": true,
-      "nativeDebugging": true
     }
   }
 }

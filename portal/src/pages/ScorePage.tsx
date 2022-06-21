@@ -17,9 +17,10 @@ export function ScorePage(props: UserInfoProps): JSX.Element {
 
     function render() {
         return (
-            <>
+            <div className="flex flex-col">
                 <Headline size={HeadlineSize.H1}>Stilling</Headline>
-                <div>
+                <div className="flex flex-col">
+                    <PlayerScore name="Navn" wins="Vundet" points="Score" />
                     {players.value
                         .sort((a: PlayerDto, b: PlayerDto) => {
                             if (a.points === b.points) {
@@ -29,14 +30,12 @@ export function ScorePage(props: UserInfoProps): JSX.Element {
                             return a.points - b.points;
                         })
                         .map((player: PlayerDto, index: number) => (
-                            <Headline
-                                size={HeadlineSize.H2}
-                                key={player.id}>
-                                {player.name}
-                            </Headline>
+                            <PlayerScore
+                                {...player}
+                                key={player.id} />
                         ))}
                 </div>
-            </>
+            </div>
         );
     }
 
@@ -53,4 +52,27 @@ export function ScorePage(props: UserInfoProps): JSX.Element {
             return <h1>Indlæser...</h1>;
         }
     }
+}
+
+interface IPlayerScoreProps {
+    name: string;
+    wins: string | number;
+    points: string | number;
+}
+
+function PlayerScore({ name, wins, points }: IPlayerScoreProps) {
+
+    return (
+        <div className="flex flex-row justify-start odd:bg-blue-200">
+            <div className="w-2/3">
+                {name}
+            </div>
+            <div className="w-1/6">
+                {wins}
+            </div>
+            <div className="w-1/6">
+                {points}
+            </div>
+        </div>
+    );
 }

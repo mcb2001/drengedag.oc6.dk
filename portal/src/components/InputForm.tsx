@@ -3,28 +3,21 @@ import { classNames } from "../oc6";
 
 interface IInputFormProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
-    labelClassName?: string;
 }
 
-const handleClick = (ref: React.RefObject<HTMLInputElement>) => ref && ref.current && ref.current.select();
-
-export function InputForm({ label, labelClassName, className, ...props }: IInputFormProps) {
+export function InputForm({ label, ...props }: IInputFormProps) {
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     return (
-        <>
-            <label
-                onClick={() => handleClick(inputRef)}
-                className={classNames("p-2", "inline-block", "mx-2", "text-right", (labelClassName ?? ""))}
-            >
+        <div className={classNames("flex lg:w-3/12 w-full")}>
+            <label className="p-2 inline-block w-1/6">
                 {label}
             </label>
             <input
                 ref={inputRef}
-                onClick={() => handleClick(inputRef)}
-                className={classNames("inline-block", "p-2", "mx-2", "border", (className ?? ""), (props.readOnly ? "bg-gray-200" : ""))}
+                className={classNames("inline-block", "p-2", "border", "w-5/6", (props.readOnly ? "bg-gray-200" : ""))}
                 {...props}
             />
-        </>
+        </div>
     );
 }

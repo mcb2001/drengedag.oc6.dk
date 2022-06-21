@@ -10,10 +10,10 @@ export function Router(props: UserInfoProps) {
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/" element={<ScorePage {...props} />} />
             <Route path="/self" element={<SelfPage {...props} />} />
+            <Route path="/debug" element={<DebugPage {...props} />} />
 
             {AuthenticatedRoute("/games", <GamesPage />, props.self.isAdmin)}
             {AuthenticatedRoute("/players", <PlayersPage {...props} />, props.self.isAdmin)}
-            {AuthenticatedRoute("/debuginfo", <DebugPage {...props} />, props.self.isAdmin)}
         </Routes>
     );
 }

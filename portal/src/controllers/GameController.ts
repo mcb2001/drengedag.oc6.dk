@@ -4,7 +4,7 @@ import { FinishGameRequest, GameDto, NewGameRequest } from "../models";
 class DefaultGameController extends AbstractController {
     public constructor() {
         if (process.env.NODE_ENV === "development") {
-            super("https://localhost:5001/api/game");
+            super("https://localhost:7155/api/game");
         }
         else {
             super("/api/game");

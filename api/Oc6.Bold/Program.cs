@@ -83,8 +83,6 @@ namespace Oc6.Bold
 
             services.AddAdminPolicyAuthorization();
 
-            services.AddSingleton<NameService>();
-
             services.AddLogging(config => config.AddConsole());
 
             services.AddDbContext<BoldContext>(options =>
@@ -92,21 +90,15 @@ namespace Oc6.Bold
                     config.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddScoped<GameService>();
-
+            services.AddScoped<NameService>();
             services.AddScoped<PlayerService>();
+            services.AddScoped<UserService>();
 
             return services;
         }
 
         private static void ConfigureApp(WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
-            {
-                app.Services
-                    .GetService<ILogger<Program>>()?
-                    .LogInformation("Swagger available at: https://localhost:5001/swagger");
-            }
-
             app.UseSwagger();
             app.UseSwaggerUI();
 

@@ -1,14 +1,16 @@
 import React from "react";
 import { ButtonColor, PlayerDto, UserInfoProps } from "../models";
+import { classNames } from "../oc6";
 import { InputForm, OutlinedButton } from "./";
 
 interface IEditPlayerFormProps {
     player: PlayerDto;
     update: (player: PlayerDto) => void;
     delete: (player: PlayerDto) => void;
+    isSelfEdit?: boolean;
 }
 
-export function EditPlayerForm(props: IEditPlayerFormProps) {
+export function EditPlayerForm({ isSelfEdit = false, ...props }: IEditPlayerFormProps) {
 
     const [name, setName] = React.useState<string>(props.player.name);
     const [email, setEmail] = React.useState<string>(props.player.email);
@@ -22,19 +24,15 @@ export function EditPlayerForm(props: IEditPlayerFormProps) {
     }
 
     return (
-        <div className="flex justify-start my-2">
+        <div className="flex justify-start my-2 items-center shadow-lg border flex-wrap mb-6">
             <InputForm
                 label="Id"
                 type="text"
-                className="w-1/6"
-                labelClassName="w-1/12"
                 value={props.player.id <= 0 ? "" : props.player.id.toString()}
                 readOnly={true} />
             <InputForm
                 label="Name"
                 type="text"
-                className="w-1/6"
-                labelClassName="w-1/12"
                 value={name}
                 readOnly={props.player.id <= 0}
                 onChange={(event) => setName(event.target.value)}
@@ -42,21 +40,20 @@ export function EditPlayerForm(props: IEditPlayerFormProps) {
             <InputForm
                 label="Email"
                 type="text"
-                className="w-1/6"
-                labelClassName="w-1/12"
                 value={email}
+                readOnly={isSelfEdit}
                 onChange={(event) => setEmail(event.target.value)}
             />
             <OutlinedButton
-                className="w-1/6 mx-2"
+                className="lg:w-2/12 w-full"
                 buttonColor={ButtonColor.Lime}
                 onClick={() => save()}
             >
-                Gem
+                {props.player.id <= 0 ? "Opret" : "Gem"}
             </OutlinedButton>
             <OutlinedButton
-                disabled={props.player.id <= 0}
-                className="w-1/12 mx-2"
+                disabled={isSelfEdit || props.player.id <= 0}
+                className="lg:w-1/12 w-full"
                 buttonColor={ButtonColor.Orange}
                 onClick={() => props.delete(props.player)}
             >

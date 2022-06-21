@@ -20,41 +20,32 @@ namespace Oc6.Bold.Services
 
         private readonly BoldContext context;
         private readonly NameService nameService;
+        private readonly UserService userService;
 
-        public PlayerService(BoldContext context, NameService nameService)
+        public PlayerService(BoldContext context, NameService nameService, UserService userService)
         {
             this.context = context;
             this.nameService = nameService;
+            this.userService = userService;
         }
 
-        public async Task<PlayerDto> UpdateOrCreateSelf(string? auth0Id, string email, string name, bool isAdmin)
+        public async Task<PlayerDto> UpdateSelf(string name)
         {
-            if (await context.Players
-                .Where(x => x.Auth0UserId == auth0Id)
-                .SingleOrDefaultAsync() is Player player)
+            int userId = await userService.GetCurrentUserIdAsync();
+
+            if (userId > 0)
             {
+                var player = await context.Players
+                    .SingleAsync(x => x.Id == userId);
+
                 player.Name = name;
 
                 await context.SaveChangesAsync();
 
-                return await GetByIdAsync(player.Id);
+                return await GetByIdAsync(userId);
             }
 
-            if (await context.Players
-                .Where(x => x.Email == email)
-                .SingleOrDefaultAsync() is Player playerWithMatchingEmail)
-            {
-                //store the Id as we now have it
-                playerWithMatchingEmail.Auth0UserId = auth0Id;
-
-                playerWithMatchingEmail.Name = name;
-
-                await context.SaveChangesAsync();
-
-                return await GetByIdAsync(playerWithMatchingEmail.Id);
-            }
-
-            return await GetOrCreateSelf(auth0Id, email, isAdmin);
+            throw new ArgumentException("Invalid state");
         }
 
         public async Task<PlayerDto> GetByIdAsync(int id) =>
@@ -70,66 +61,24 @@ namespace Oc6.Bold.Services
                 .Select(ToDto)
                 .ToListAsync();
 
-        public async Task<PlayerDto> GetOrCreateSelf(string? auth0Id, string email, bool isAdmin)
+        public async Task<PlayerDto> GetOrCreateSelf()
         {
-            if (await context.Players
-                .AsNoTracking()
-                .Where(x => x.Auth0UserId == auth0Id)
-                .Select(x => x.Id)
-                .SingleOrDefaultAsync() is int playerId && playerId != 0)
-            {
-                return await GetByIdAsync(playerId);
-            }
+            int userId = await userService.GetCurrentUserIdAsync();
 
-            if (await context.Players
-                .Where(x => x.Email == email)
-                .SingleOrDefaultAsync() is Player playerWithMatchingEmail)
-            {
-                //store the Id as we now have it
-                playerWithMatchingEmail.Auth0UserId = auth0Id;
-                await context.SaveChangesAsync();
-
-                return await GetByIdAsync(playerWithMatchingEmail.Id);
-            }
-
-            return await Create(email, auth0Id, isAdmin);
+            return await GetByIdAsync(userId);
         }
 
-        public async Task<PlayerDto> Create(string email, string? auth0UserId, bool isAdmin)
+        public async Task<PlayerDto> Create(string email)
         {
-            List<string> names = await context.Players
-                .AsNoTracking()
-                .Select(x => x.Name)
-                .ToListAsync();
-
-            bool found = false;
-
-            string name = string.Empty;
-
-            for (int i = 0; i < 100; ++i)
-            {
-                name = nameService.GetName();
-
-                if (!names.Any(x =>
-                    string.Compare(x, name, StringComparison.OrdinalIgnoreCase) == 0))
-                {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found)
-            {
-                throw new Exception();
-            }
+            string name = await nameService.GetUniqueNameAsync();
 
             Player player = new()
             {
                 Id = default,
                 Name = name,
                 Email = email,
-                Auth0UserId = auth0UserId,
-                IsAdmin = isAdmin,
+                Auth0UserId = "",
+                IsAdmin = false,
             };
 
             context.Players.Add(player);

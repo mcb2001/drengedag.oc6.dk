@@ -9,7 +9,7 @@ import { useLoadableState } from "./oc6";
 function App() {
     const { loginWithRedirect, isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
 
-    const [self, setSelf] = useLoadableState<PlayerDto>(getDefaultPlayerDto(), async () => {
+    const [self, setSelf, reloadSelf] = useLoadableState<PlayerDto>(getDefaultPlayerDto(), async () => {
         const token = await getAccessTokenSilently();
         return await PlayerController.self(token);
     });
@@ -38,7 +38,8 @@ function App() {
     }
 
     const userInfoProps = {
-        self: self.value
+        self: self.value,
+        reloadSelf: async () => reloadSelf()
     };
 
     return (

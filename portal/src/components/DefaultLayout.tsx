@@ -8,7 +8,7 @@ export function DefaultLayout(props: UserInfoProps) {
     return (
         <div>
             < Menu {...props} />
-            <div className="flex flex-col justify-start items-center">
+            <div className="flex flex-col justify-start items-center z-10">
                 <div className="container p-4" >
                     {children}
                 </div>

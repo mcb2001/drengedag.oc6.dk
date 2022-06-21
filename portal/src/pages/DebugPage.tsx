@@ -15,7 +15,7 @@ export function DebugPage(props: UserInfoProps): JSX.Element {
         return (
             <div>
                 <Headline size={HeadlineSize.H1}>Debug information</Headline>
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-row justify-around flex-wrap items-center">
                     <DebugTextArea
                         label="User"
                         text={toJson(user)} />
@@ -42,15 +42,13 @@ interface IDebugTextAreaProps {
 }
 
 const DebugTextArea = (props: IDebugTextAreaProps) => (
-    <div>
+    <div className="inline-block md:w-1/3 w-full">
         <Headline size={HeadlineSize.H2}>
             {props.label}
         </Headline>
         <textarea
             onClick={e => (e.target as HTMLTextAreaElement).select()}
-            className="border inline-block border-solid border-black"
-            rows={20}
-            cols={50}
+            className="border inline-block border-solid border-black h-96 w-full"
             readOnly={true}
             value={props.text}
         />
