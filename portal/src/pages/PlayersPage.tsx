@@ -1,15 +1,18 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import { toast } from "react-toastify";
 import { EditPlayerForm, ErrorLoadingView, Headline } from "../components";
 import { PlayerController } from "../controllers";
 import { getDefaultPlayerDto, HeadlineSize, LoadState, PlayerDto, UserInfoProps } from "../models";
-import { errorToJsonOutput, objectToJsonOutput, useDocTitle, useLoadableState } from "../oc6";
+import { useDocTitle, useLoadableState } from "../oc6";
 
 function PlayersPage(props: UserInfoProps) {
     useDocTitle("Spillere");
 
-    const [players, setPlayers] = useLoadableState<Array<PlayerDto>>([], async () => {
-        const token = await props.getToken();
+    const { getAccessTokenSilently } = useAuth0();
+
+    const [players, setPlayers, reloadPlayers] = useLoadableState<Array<PlayerDto>>([], async () => {
+        const token = await getAccessTokenSilently();
         const newPlayers = await PlayerController.getAll(token);
         return [getDefaultPlayerDto(), ...newPlayers];
     });
@@ -21,7 +24,7 @@ function PlayersPage(props: UserInfoProps) {
     async function update(player: PlayerDto): Promise<void> {
         if (player.id <= 0) {
             try {
-                const token = await props.getToken();
+                const token = await getAccessTokenSilently();
 
                 const newPlayer = await PlayerController.post({
                     ...player,
@@ -46,19 +49,14 @@ function PlayersPage(props: UserInfoProps) {
             catch (err) {
                 console.log(err);
 
-                setPlayers({
-                    ...players,
-                    value: [],
-                    state: LoadState.Error,
-                    debug: errorToJsonOutput(err)
-                });
+                reloadPlayers();
 
                 toast.error("Spiller kunne ikke oprettes");
             }
         }
         else {
             try {
-                const token = await props.getToken();
+                const token = await getAccessTokenSilently();
 
                 const updatedPlayer = await PlayerController.put(player, token);
 
@@ -78,12 +76,7 @@ function PlayersPage(props: UserInfoProps) {
             } catch (err) {
                 console.log(err);
 
-                setPlayers({
-                    ...players,
-                    value: [],
-                    state: LoadState.Error,
-                    debug: errorToJsonOutput(err)
-                });
+                reloadPlayers();
 
                 toast.error("Spiller kunne ikke opdateres");
             }
@@ -92,21 +85,19 @@ function PlayersPage(props: UserInfoProps) {
 
     async function deletePlayer(player: PlayerDto): Promise<void> {
         try {
-            const token = await props.getToken();
+            const token = await getAccessTokenSilently();
 
-            console.log(token);
+            await PlayerController.delete(player.id, token);
 
-            throw new Error(player.name);
+            setPlayers({
+                ...players,
+                value: [...players.value.filter((p: PlayerDto) => p.id !== player.id)]
+            });
         }
         catch (err) {
             console.log(err);
 
-            setPlayers({
-                ...players,
-                value: [],
-                state: LoadState.Error,
-                debug: errorToJsonOutput(err)
-            });
+            reloadPlayers();
 
             toast.error("Spiller kunne slettes");
         }

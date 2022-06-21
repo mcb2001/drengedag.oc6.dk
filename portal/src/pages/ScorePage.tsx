@@ -1,13 +1,17 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import { ErrorLoadingView, Headline } from "../components";
 import { PlayerController } from "../controllers";
 import { HeadlineSize, LoadState, PlayerDto, UserInfoProps } from "../models";
 import { useDocTitle, useLoadableState } from "../oc6";
 
-function FrontPage(props: UserInfoProps): JSX.Element {
+export function ScorePage(props: UserInfoProps): JSX.Element {
     useDocTitle("Forside");
+
+    const { getAccessTokenSilently } = useAuth0();
+
     const [players, setPlayers] = useLoadableState<Array<PlayerDto>>([], async () => {
-        const token = await props.getToken();
+        const token = await getAccessTokenSilently();
         return await PlayerController.getAll(token);
     });
 
@@ -50,5 +54,3 @@ function FrontPage(props: UserInfoProps): JSX.Element {
         }
     }
 }
-
-export { FrontPage };

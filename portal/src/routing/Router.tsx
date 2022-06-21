@@ -1,13 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 import { UserInfoProps } from "../models";
-import { FrontPage, PlayersPage, DebugPage } from "../pages";
-import { GamesPage } from "../pages/GamesPage";
-import { LogoutPage } from "../pages/LogoutPage";
+import { LogoutPage, GamesPage, ScorePage, PlayersPage, DebugPage } from "../pages";
 
 export function Router(props: UserInfoProps) {
     return (
         <Routes>
-            <Route path="/" element={<FrontPage {...props} />} />
+            <Route path="/" element={<ScorePage {...props} />} />
             <Route path="/games" element={<GamesPage />} />
             <Route path="/players" element={<PlayersPage {...props} />} />
             <Route path="/debuginfo" element={<DebugPage {...props} />} />

@@ -1,3 +1,5 @@
 export * from "./DebugPage";
-export * from "./FrontPage";
 export * from "./PlayersPage";
+export * from "./GamesPage";
+export * from "./LogoutPage";
+export * from "./ScorePage";

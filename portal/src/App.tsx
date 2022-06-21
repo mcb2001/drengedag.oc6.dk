@@ -38,8 +38,7 @@ function App() {
     }
 
     const userInfoProps = {
-        self: self.value,
-        getToken: async () => await getAccessTokenSilently()
+        self: self.value
     };
 
     return (
