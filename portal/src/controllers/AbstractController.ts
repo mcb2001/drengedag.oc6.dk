@@ -35,8 +35,8 @@ export abstract class AbstractController {
         const requestInit: RequestInit = this.getRequestInit("GET", token);
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
-        
-        console.log(path);
+
+        await this.isSuccessfull(response);
 
         return await response.json();
     }
@@ -46,6 +46,8 @@ export abstract class AbstractController {
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
 
+        await this.isSuccessfull(response);
+
         return await response.json();
     }
 
@@ -54,6 +56,8 @@ export abstract class AbstractController {
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
 
+        await this.isSuccessfull(response);
+
         return await response.json();
     }
 
@@ -61,5 +65,15 @@ export abstract class AbstractController {
         const requestInit: RequestInit = this.getRequestInit("DELETE", token);
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
+
+        await this.isSuccessfull(response);
+    }
+
+    private async isSuccessfull(response: Response): Promise<void> {
+        if (response.status >= 300) {
+            const text = await response.text();
+
+            throw new Error(response.statusText + "\n" + text);
+        }
     }
 }

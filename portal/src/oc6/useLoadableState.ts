@@ -6,18 +6,17 @@ export function useLoadableState<TEntity>(defaultState: TEntity, method: () => P
 
     React.useEffect(() => {
         if (state.state === LoadState.None) {
-            loadGames();
+            loadState();
+
             setState({
                 ...state,
                 state: LoadState.Loading
             });
         }
 
-        async function loadGames(): Promise<void> {
+        async function loadState(): Promise<void> {
             try {
                 const newState = await method();
-
-                console.log(newState);
 
                 setState({
                     ...state,

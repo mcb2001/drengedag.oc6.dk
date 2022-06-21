@@ -1,8 +1,12 @@
 import React from "react";
-import Oc6 from "../oc6";
+import { Headline } from "../components";
+import { HeadlineSize } from "../models";
+import { useDocTitle } from "../oc6";
 
 export function GamesPage(): JSX.Element {
-    Oc6.useDocTitle("Spil");
+    useDocTitle("Spil");
 
-    return (<h1>Spil</h1>);
+    return (
+        <Headline size={HeadlineSize.H1}>Spil</Headline>
+    );
 }

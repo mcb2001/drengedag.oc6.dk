@@ -1,12 +1,12 @@
 import React from "react";
-import { ErrorLoadingView } from "../components";
+import { ErrorLoadingView, Headline } from "../components";
 import { PlayerController } from "../controllers";
-import { LoadState, PlayerDto, UserInfoProps } from "../models";
-import Oc6 from "../oc6";
+import { HeadlineSize, LoadState, PlayerDto, UserInfoProps } from "../models";
+import { useDocTitle, useLoadableState } from "../oc6";
 
 function FrontPage(props: UserInfoProps): JSX.Element {
-    Oc6.useDocTitle("Forside");
-    const [players, setPlayers] = Oc6.useLoadableState<Array<PlayerDto>>([], async () => {
+    useDocTitle("Forside");
+    const [players, setPlayers] = useLoadableState<Array<PlayerDto>>([], async () => {
         const token = await props.getToken();
         return await PlayerController.getAll(token);
     });
@@ -14,7 +14,7 @@ function FrontPage(props: UserInfoProps): JSX.Element {
     function render() {
         return (
             <>
-                <h1>Forside</h1>
+                <Headline size={HeadlineSize.H1}>Stilling</Headline>
                 <div>
                     {players.value
                         .sort((a: PlayerDto, b: PlayerDto) => {
@@ -24,9 +24,13 @@ function FrontPage(props: UserInfoProps): JSX.Element {
 
                             return a.points - b.points;
                         })
-                        .map((player: PlayerDto, index: number) => {
-                            return <h2>{player.name}</h2>;
-                        })}
+                        .map((player: PlayerDto, index: number) => (
+                            <Headline
+                                size={HeadlineSize.H2}
+                                key={player.id}>
+                                {player.name}
+                            </Headline>
+                        ))}
                 </div>
             </>
         );
@@ -34,7 +38,7 @@ function FrontPage(props: UserInfoProps): JSX.Element {
 
     switch (players.state) {
         case LoadState.Error: {
-            return <ErrorLoadingView loadableObject={players}/>;
+            return <ErrorLoadingView loadableObject={players} />;
         }
         case LoadState.Success: {
             return render();

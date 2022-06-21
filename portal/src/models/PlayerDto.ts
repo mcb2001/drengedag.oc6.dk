@@ -7,15 +7,11 @@ export interface PlayerDto {
     wins: number;
 }
 
-const DEFAULT_PLAYER: PlayerDto = {
-    id: 0,
+export const getDefaultPlayerDto = () => ({
+    id: -Math.random(),
     name: "",
     email: "",
     auth0UserId: null,
     points: 0,
     wins: 0
-};
-
-export function getDefaultPlayerDto() {
-    return { ...DEFAULT_PLAYER };
-}
+});

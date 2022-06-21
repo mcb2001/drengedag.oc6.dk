@@ -6,3 +6,5 @@ export * from "./TeamDto";
 export * from "./LoadState";
 export * from "./LoadableObject";
 export * from "./UserInfoProps";
+export * from "./ButtonColor";
+export * from "./HeadlineSize";

@@ -1,5 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import { Headline } from "../components";
+import { HeadlineSize } from "../models";
 
 export function LogoutPage() {
     const { logout } = useAuth0();
@@ -9,6 +11,6 @@ export function LogoutPage() {
     navigate("/");
 
     return (
-        <h1>Logger ud...</h1>
+        <Headline size={HeadlineSize.H1}>Logger ud...</Headline>
     );
 }

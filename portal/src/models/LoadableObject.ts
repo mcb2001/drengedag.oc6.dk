@@ -8,7 +8,7 @@ export interface LoadableObject<TEntity> {
 
 export function getDefaultLoadableObject<T>(defaultValue: T) {
     return {
-        value: { ...defaultValue },
+        value: defaultValue,
         state: LoadState.None,
         debug: ""
     };

@@ -4,12 +4,12 @@ import { Router } from "./routing";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PlayerController } from "./controllers";
 import { getDefaultPlayerDto, LoadState, PlayerDto } from "./models";
-import Oc6 from "./oc6";
+import { useLoadableState } from "./oc6";
 
 function App() {
     const { loginWithRedirect, isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
 
-    const [self, setSelf] = Oc6.useLoadableState<PlayerDto>(getDefaultPlayerDto(), async () => {
+    const [self, setSelf] = useLoadableState<PlayerDto>(getDefaultPlayerDto(), async () => {
         const token = await getAccessTokenSilently();
         return await PlayerController.self(token);
     });
