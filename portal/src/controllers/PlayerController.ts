@@ -4,7 +4,7 @@ import { AbstractController } from "./";
 class DefaultPlayerController extends AbstractController {
     public constructor() {
         if (process.env.NODE_ENV === "development") {
-            super("https://localhost:7155/api/player");
+            super("https://localhost:5001/api/player");
         }
         else {
             super("/api/player");

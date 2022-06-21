@@ -97,9 +97,13 @@ namespace Oc6.Bold
         {
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.Services
+                    .GetService<ILogger<Program>>()?
+                    .LogInformation("Swagger available at: https://localhost:5001/swagger");
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseFileServer();
 
