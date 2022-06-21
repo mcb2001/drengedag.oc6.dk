@@ -1,7 +1,7 @@
 import { AbstractController } from ".";
 import { FinishGameRequest, GameDto, NewGameRequest } from "../models";
 
-export class GameController extends AbstractController {
+class DefaultGameController extends AbstractController {
     public constructor() {
         if (process.env.NODE_ENV === "development") {
             super("https://localhost:7155/api/game");
@@ -11,19 +11,21 @@ export class GameController extends AbstractController {
         }
     }
 
-    public async getById(id: number): Promise<GameDto> {
-        return await this.getRequest("/" + id);
+    public async getById(id: number, token: string): Promise<GameDto> {
+        return await this.getRequest("/" + id, token);
     }
 
-    public async getAll(): Promise<Array<GameDto>> {
-        return await this.getRequest("/");
+    public async getAll(token: string): Promise<Array<GameDto>> {
+        return await this.getRequest("/", token);
     }
 
-    public async post(request: NewGameRequest): Promise<GameDto> {
-        return await this.postRequest("/", request);
+    public async post(request: NewGameRequest, token: string): Promise<GameDto> {
+        return await this.postRequest("/", token, request);
     }
 
-    public async finishGame(request: FinishGameRequest): Promise<GameDto> {
-        return await this.putRequest("/finish", request);
+    public async finishGame(request: FinishGameRequest, token: string): Promise<GameDto> {
+        return await this.putRequest("/finish", token, request);
     }
 }
+
+export const GameController: DefaultGameController = new DefaultGameController();

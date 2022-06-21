@@ -1,25 +1,18 @@
 import React from "react";
-import { DefaultLayout, DefaultToastContainer } from "./components";
+import { DefaultLayout, DefaultToastContainer, ErrorLoadingView } from "./components";
 import { Router } from "./routing";
 import { useAuth0 } from "@auth0/auth0-react";
+import { PlayerController } from "./controllers";
+import { getDefaultPlayerDto, LoadState, PlayerDto } from "./models";
+import Oc6 from "./oc6";
 
 function App() {
     const { loginWithRedirect, isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
-    const [accessToken, setAccessToken] = React.useState<string | null>(null);
 
-    React.useEffect(() => {
-        const getJwt = async () => {
-            try {
-                const newAccessToken = await getAccessTokenSilently();
-
-                setAccessToken(newAccessToken);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
-        getJwt();
-    }, [accessToken, getAccessTokenSilently]);
+    const [self, setSelf] = Oc6.useLoadableState<PlayerDto>(getDefaultPlayerDto(), async () => {
+        const token = await getAccessTokenSilently();
+        return await PlayerController.self(token);
+    });
 
     const showLoading: () => JSX.Element = () => <h1>Logging in...</h1>;
 
@@ -28,15 +21,31 @@ function App() {
         return showLoading();
     }
 
-    if (!accessToken) {
-        return showLoading();
+    function render() {
+        return <Router {...userInfoProps} />;
     }
 
-    return (
-        <DefaultLayout>
-            <DefaultToastContainer />
-            <Router accessToken={accessToken} />
+    function selectRender() {
+        if (self.state === LoadState.Success) {
+            return render();
+        }
+        else if (self.state === LoadState.Error) {
+            return <ErrorLoadingView loadableObject={self} />;
+        }
+        else {
+            return <h1>Indlæser...</h1>;
+        }
+    }
 
+    const userInfoProps = {
+        self: self.value,
+        getToken: async () => await getAccessTokenSilently()
+    };
+
+    return (
+        <DefaultLayout {...userInfoProps}>
+            <DefaultToastContainer />
+            {selectRender()}
         </DefaultLayout>
     );
 }

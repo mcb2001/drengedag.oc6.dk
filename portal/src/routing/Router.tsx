@@ -1,14 +1,17 @@
 import { Route, Routes } from "react-router-dom";
-import { FrontPage, TeamsPage, PlayersPage, DebugInfo } from "../pages";
-import { UserInfoProps } from "../oc6";
+import { UserInfoProps } from "../models";
+import { FrontPage, TeamsPage, PlayersPage, DebugPage } from "../pages";
+import { GamesPage } from "../pages/GamesPage";
+import { LogoutPage } from "../pages/LogoutPage";
 
 export function Router(props: UserInfoProps) {
     return (
         <Routes>
-            <Route path="/" element={<FrontPage />} />
-            <Route path="/teams" element={<TeamsPage />} />
-            <Route path="/players" element={<PlayersPage />} />
-            <Route path="/debuginfo" element={<DebugInfo {...props} />} />
+            <Route path="/" element={<FrontPage {...props} />} />
+            <Route path="/games" element={<GamesPage />} />
+            <Route path="/players" element={<PlayersPage {...props} />} />
+            <Route path="/debuginfo" element={<DebugPage {...props} />} />
+            <Route path="/logout" element={<LogoutPage />} />
         </Routes>
     );
 }

@@ -1,3 +1,13 @@
+const DEFAULT_REQUEST_INIT: RequestInit = {
+    mode: "cors",
+    cache: "no-cache",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer"
+};
+
 export abstract class AbstractController {
     protected baseUrl: string;
 
@@ -5,70 +15,50 @@ export abstract class AbstractController {
         this.baseUrl = baseUrl;
     }
 
-    protected async getRequest<TResponse>(path: string): Promise<TResponse> {
-        const requestInit: RequestInit = {
-            method: "GET",
-            mode: "cors",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer"
-        };
+    protected getRequestInit = (method: "GET" | "POST" | "PUT" | "DELETE", token: string) => ({
+        ...DEFAULT_REQUEST_INIT,
+        headers: {
+            ...DEFAULT_REQUEST_INIT.headers,
+            "authorization": "Bearer " + token
+        },
+        method: method
+    });
 
-        const response: Response = await window.fetch(this.baseUrl + path, requestInit);
-
-        return await response.json();
-    }
-
-    protected async postRequest<TRequest, TResponse>(path: string, body: TRequest): Promise<TResponse> {
-        const requestInit: RequestInit = {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer",
+    protected submitRequestInit<TRequest>(method: "POST" | "PUT", token: string, body: TRequest): RequestInit {
+        return {
+            ...this.getRequestInit(method, token),
             body: JSON.stringify(body)
         };
+    }
+
+    protected async getRequest<TResponse>(path: string, token: string): Promise<TResponse> {
+        const requestInit: RequestInit = this.getRequestInit("GET", token);
+
+        const response: Response = await window.fetch(this.baseUrl + path, requestInit);
+        
+        console.log(path);
+
+        return await response.json();
+    }
+
+    protected async postRequest<TRequest, TResponse>(path: string, token: string, body: TRequest): Promise<TResponse> {
+        const requestInit: RequestInit = this.submitRequestInit("POST", token, body);
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
 
         return await response.json();
     }
 
-    protected async putRequest<TRequest, TResponse>(path: string, body: TRequest): Promise<TResponse> {
-        const requestInit: RequestInit = {
-            method: "PUT",
-            mode: "cors",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer",
-            body: JSON.stringify(body)
-        };
+    protected async putRequest<TRequest, TResponse>(path: string, token: string, body: TRequest): Promise<TResponse> {
+        const requestInit: RequestInit = this.submitRequestInit("PUT", token, body);
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
 
         return await response.json();
     }
 
-    protected async deleteRequest(path: string): Promise<void> {
-        const requestInit: RequestInit = {
-            method: "DELETE",
-            mode: "cors",
-            cache: "no-cache",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer"
-        };
+    protected async deleteRequest(path: string, token: string): Promise<void> {
+        const requestInit: RequestInit = this.getRequestInit("DELETE", token);
 
         const response: Response = await window.fetch(this.baseUrl + path, requestInit);
     }

@@ -1,4 +1,3 @@
-import * as Oc6 from "./useDocTitle";
+import * as Oc6 from "./toOc6NameSpace";
 
-export * from "./UserInfoProps";
 export default Oc6;

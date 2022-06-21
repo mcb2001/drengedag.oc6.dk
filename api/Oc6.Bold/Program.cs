@@ -101,6 +101,15 @@ namespace Oc6.Bold
                 app.UseSwaggerUI();
             }
 
+            app.UseFileServer();
+
+            app.UseCors(options =>
+            {
+                options.AllowAnyHeader();
+                options.AllowAnyMethod();
+                options.AllowAnyOrigin();
+            });
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

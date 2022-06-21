@@ -44,21 +44,14 @@ namespace Oc6.Bold.Services
         {
             if (await context.Players
                 .AsNoTracking()
-                .Include(x => x.TeamPlayers)
-                .ThenInclude(x => x.Team)
-                .ThenInclude(x => x.Game)
                 .Where(x => x.Auth0UserId == auth0Id)
-                .Select(x=>x.Id)
-                .SingleOrDefaultAsync() is int playerId)
+                .Select(x => x.Id)
+                .SingleOrDefaultAsync() is int playerId && playerId != 0)
             {
                 return await GetByIdAsync(playerId);
             }
 
             if (await context.Players
-                .AsNoTracking()
-                .Include(x => x.TeamPlayers)
-                .ThenInclude(x => x.Team)
-                .ThenInclude(x => x.Game)
                 .Where(x => x.Email == email)
                 .SingleOrDefaultAsync() is Player playerWithMatchingEmail)
             {
@@ -118,9 +111,6 @@ namespace Oc6.Bold.Services
         public async Task<PlayerDto> Update(int id, string name)
         {
             Player player = await context.Players
-                .Include(x => x.TeamPlayers)
-                .ThenInclude(x => x.Team)
-                .ThenInclude(x => x.Game)
                 .Where(x => x.Id == id)
                 .SingleAsync();
 

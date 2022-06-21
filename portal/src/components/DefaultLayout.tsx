@@ -1,14 +1,17 @@
 import React from "react";
+import { UserInfoProps } from "../models";
 import { Menu } from "./Menu";
 
-export function DefaultLayout(props: React.PropsWithChildren<{}>) {
+export function DefaultLayout(props: UserInfoProps) {
     const { children } = props;
 
     return (
-        <div className="app">
-            < Menu />
-            <div className="content" >
-                {children}
+        <div>
+            < Menu {...props} />
+            <div className="flex flex-col justify-start items-center">
+                <div className="container p-4" >
+                    {children}
+                </div>
             </div>
         </div>
     );

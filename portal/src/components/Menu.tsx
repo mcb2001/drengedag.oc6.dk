@@ -1,49 +1,82 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { faCogs, faHome, faSoccerBall, faUsers } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faHome, faSoccerBall, faUser, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { UserInfoProps } from "../models";
 
-export function Menu() {
-    const { logout } = useAuth0();
+export function Menu(props: UserInfoProps) {
+    return (
+        <div className="flex flex-row justify-around shadow-lg">
+            <MenuLink
+                to="/"
+                icon={faHome}
+                text="Forside"
+            />
+            <MenuLink
+                to="/games"
+                icon={faSoccerBall}
+                text="Spil"
+            />
+            <MenuLink
+                to="/players"
+                icon={faUsers}
+                text="Spillere"
+            />
+            <MenuLink
+                to="/debuginfo"
+                icon={faCogs}
+                text="DebugInfo"
+            />
+            <MenuLink
+                to="/logout"
+                icon={faUser}
+                text="Logout"
+                subText={props.self.name}
+            />
+        </div>
+    );
+}
+
+interface IMenuLinkProps {
+    icon: IconDefinition;
+    to: string;
+    text: string;
+    subText?: string;
+}
+
+function MenuLink({ icon, to, text, subText }: IMenuLinkProps) {
+    function renderText() {
+        if (subText) {
+            return (
+                <div className="flex flex-col justify-center items-center">
+                    <span className="text-center">
+                        {text}
+                    </span>
+                    <span className="text-xs">
+                        {subText}
+                    </span>
+                </div>
+            );
+        }
+        else {
+            return (
+                <>
+                    <span className="text-center">
+                        {text}
+                    </span>
+                </>
+            );
+        }
+    }
 
     return (
-        <div className="menu">
-            <NavLink
-                className="menu-item"
-                to="/">
-                <FontAwesomeIcon
-                    icon={faHome}
-                    className="menu-item-icon" />
-                Forside
-            </NavLink>
-            <NavLink
-                className="menu-item"
-                to="/teams">
-                <FontAwesomeIcon
-                    icon={faSoccerBall}
-                    className="menu-item-icon" />
-                Teams
-            </NavLink>
-            <NavLink
-                className="menu-item"
-                to="/players">
-                <FontAwesomeIcon
-                    icon={faUsers}
-                    className="menu-item-icon" />
-                Spillere
-            </NavLink>
-            <NavLink
-                className="menu-item"
-                to="/debuginfo">
-                <FontAwesomeIcon
-                    icon={faCogs}
-                    className="menu-item-icon" />
-                DebugInfo
-            </NavLink>
-            <button onClick={() => logout()}>
-                Logout
-            </button>
-        </div>
+        <NavLink
+            className="p-4 text-xl flex flex-row justify-center items-center w-1/6"
+            to={to}>
+            <FontAwesomeIcon
+                className=""
+                icon={icon} />
+            {renderText()}
+        </NavLink>
     );
 }
