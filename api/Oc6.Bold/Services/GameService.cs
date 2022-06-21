@@ -17,7 +17,7 @@ namespace Oc6.Bold.Services
         public static readonly Expression<Func<Game, GameDto>> ToDto = g =>
             new GameDto(g.Id, g.Name, g.IsActive, g.Teams.Select(t =>
                 new TeamDto(t.Id, t.TeamPlayers.Select(tp =>
-                    new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId,
+                    new PlayerDto(tp.Player.Id, tp.Player.Name, tp.Player.Email, tp.Player.Auth0UserId, tp.Player.IsAdmin,
                         tp.Player.TeamPlayers.Sum(x => x.Team.Points),
                         tp.Player.TeamPlayers.Where(x => x.Team.Points == 1).Count())))));
 

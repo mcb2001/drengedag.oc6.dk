@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonColor, PlayerDto } from "../models";
+import { ButtonColor, PlayerDto, UserInfoProps } from "../models";
 import { InputForm, OutlinedButton } from "./";
 
 interface IEditPlayerFormProps {
@@ -9,6 +9,7 @@ interface IEditPlayerFormProps {
 }
 
 export function EditPlayerForm(props: IEditPlayerFormProps) {
+
     const [name, setName] = React.useState<string>(props.player.name);
     const [email, setEmail] = React.useState<string>(props.player.email);
 

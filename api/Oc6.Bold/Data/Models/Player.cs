@@ -15,6 +15,8 @@ namespace Oc6.Bold.Data.Models
 
         public string Email { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public string? Auth0UserId { get; set; }
 
         public List<TeamPlayer> TeamPlayers { get; set; }

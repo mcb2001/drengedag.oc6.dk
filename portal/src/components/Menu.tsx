@@ -1,4 +1,4 @@
-import { faCogs, faHome, faSoccerBall, faUser, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faCogs, faHome, faSoccerBall, faUser, faUsers, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -28,8 +28,13 @@ export function Menu(props: UserInfoProps) {
                 text="DebugInfo"
             />
             <MenuLink
-                to="/logout"
+                to="/self"
                 icon={faUser}
+                text="Profil"
+            />
+            <MenuLink
+                to="/logout"
+                icon={faArrowRight}
                 text="Logout"
                 subText={props.self.name}
             />

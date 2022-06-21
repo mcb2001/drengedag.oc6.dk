@@ -14,7 +14,7 @@ namespace Oc6.Bold.Services
     public class PlayerService
     {
         public static readonly Expression<Func<Player, PlayerDto>> ToDto = p =>
-            new PlayerDto(p.Id, p.Name, p.Email, p.Auth0UserId,
+            new PlayerDto(p.Id, p.Name, p.Email, p.Auth0UserId, p.IsAdmin,
                     p.TeamPlayers.Sum(x => x.Team.Points),
                     p.TeamPlayers.Where(x => x.Team.Points == 1).Count());
 
@@ -25,6 +25,36 @@ namespace Oc6.Bold.Services
         {
             this.context = context;
             this.nameService = nameService;
+        }
+
+        public async Task<PlayerDto> UpdateOrCreateSelf(string? auth0Id, string email, string name, bool isAdmin)
+        {
+            if (await context.Players
+                .Where(x => x.Auth0UserId == auth0Id)
+                .SingleOrDefaultAsync() is Player player)
+            {
+                player.Name = name;
+
+                await context.SaveChangesAsync();
+
+                return await GetByIdAsync(player.Id);
+            }
+
+            if (await context.Players
+                .Where(x => x.Email == email)
+                .SingleOrDefaultAsync() is Player playerWithMatchingEmail)
+            {
+                //store the Id as we now have it
+                playerWithMatchingEmail.Auth0UserId = auth0Id;
+
+                playerWithMatchingEmail.Name = name;
+
+                await context.SaveChangesAsync();
+
+                return await GetByIdAsync(playerWithMatchingEmail.Id);
+            }
+
+            return await GetOrCreateSelf(auth0Id, email, isAdmin);
         }
 
         public async Task<PlayerDto> GetByIdAsync(int id) =>
@@ -40,7 +70,7 @@ namespace Oc6.Bold.Services
                 .Select(ToDto)
                 .ToListAsync();
 
-        public async Task<PlayerDto> GetOrCreateSelf(string? auth0Id, string email)
+        public async Task<PlayerDto> GetOrCreateSelf(string? auth0Id, string email, bool isAdmin)
         {
             if (await context.Players
                 .AsNoTracking()
@@ -62,10 +92,10 @@ namespace Oc6.Bold.Services
                 return await GetByIdAsync(playerWithMatchingEmail.Id);
             }
 
-            return await Create(email, auth0Id);
+            return await Create(email, auth0Id, isAdmin);
         }
 
-        public async Task<PlayerDto> Create(string email, string? auth0UserId)
+        public async Task<PlayerDto> Create(string email, string? auth0UserId, bool isAdmin)
         {
             List<string> names = await context.Players
                 .AsNoTracking()
@@ -99,6 +129,7 @@ namespace Oc6.Bold.Services
                 Name = name,
                 Email = email,
                 Auth0UserId = auth0UserId,
+                IsAdmin = isAdmin,
             };
 
             context.Players.Add(player);

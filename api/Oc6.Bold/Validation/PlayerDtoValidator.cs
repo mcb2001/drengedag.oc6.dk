@@ -15,11 +15,15 @@ namespace Oc6.Bold.Validation
         {
             RuleFor(player => player.Name)
                 .NotEmpty()
-                .NotNull();
+                .WithMessage("Navn kan ikke være tomt")
+                .NotNull()
+                .WithMessage("Navn kan ikke være null");
 
             RuleFor(player => player.Email)
                 .NotEmpty()
-                .NotNull();
+                .WithMessage("Email kan ikke være tomt")
+                .NotNull()
+                .WithMessage("Email kan ikke være null");
         }
     }
 }
