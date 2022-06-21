@@ -1,9 +1,13 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Oc6.Bold.Data;
+using Oc6.Bold.Dtos;
 using Oc6.Bold.Policies;
 using Oc6.Bold.Services;
+using Oc6.Bold.Validation;
 
 namespace Oc6.Bold
 {
@@ -26,7 +30,8 @@ namespace Oc6.Bold
 
         private static IServiceCollection ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(options => options.RegisterValidatorsFromAssembly(typeof(Program).Assembly));
 
             services.AddEndpointsApiExplorer();
 
