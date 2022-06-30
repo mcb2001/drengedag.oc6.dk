@@ -1,0 +1,14 @@
+.spinning {
+    animation-duration: 1450ms;
+    animation-name: spinningFrames;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-out;
+    width: 100px;
+    height: 100px;
+}
+
+@keyframes spinningFrames {
+    100% {
+        transform: rotate(360deg);
+    }
+}

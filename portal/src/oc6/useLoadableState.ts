@@ -1,7 +1,7 @@
 import React from "react";
 import { getDefaultLoadableObject, LoadableObject, LoadState } from "../models";
 
-export function useLoadableState<TEntity>(defaultState: TEntity, method: () => Promise<TEntity>): [LoadableObject<TEntity>, React.Dispatch<React.SetStateAction<LoadableObject<TEntity>>>, () => Promise<void>] {
+export function useLoadableState<TEntity>(defaultState: TEntity, setSpinnerVisible: (show: boolean) => void, method: () => Promise<TEntity>): [LoadableObject<TEntity>, React.Dispatch<React.SetStateAction<LoadableObject<TEntity>>>, () => Promise<void>] {
     const [state, setState] = React.useState<LoadableObject<TEntity>>(getDefaultLoadableObject(defaultState));
 
     React.useEffect(() => {
@@ -17,6 +17,8 @@ export function useLoadableState<TEntity>(defaultState: TEntity, method: () => P
 
     async function loadState(): Promise<void> {
         try {
+            setSpinnerVisible(true);
+
             const newState = await method();
 
             setState({
@@ -24,8 +26,12 @@ export function useLoadableState<TEntity>(defaultState: TEntity, method: () => P
                 value: newState,
                 state: LoadState.Success
             });
+
+            setSpinnerVisible(false);
         }
         catch (err) {
+            setSpinnerVisible(false);
+
             console.log(err);
 
             setState({

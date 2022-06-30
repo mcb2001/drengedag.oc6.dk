@@ -6,3 +6,4 @@ export * from "./Menu";
 export * from "./OutlinedButton";
 export * from "./InputForm";
 export * from "./Headline";
+export * from "./spinnercontainer/";

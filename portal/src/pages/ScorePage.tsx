@@ -10,7 +10,7 @@ export function ScorePage(props: UserInfoProps): JSX.Element {
 
     const { getAccessTokenSilently } = useAuth0();
 
-    const [players, setPlayers] = useLoadableState<Array<PlayerDto>>([], async () => {
+    const [players, setPlayers] = useLoadableState<Array<PlayerDto>>([], props.setSpinnerVisible, async () => {
         const token = await getAccessTokenSilently();
         return await PlayerController.getAll(token);
     });

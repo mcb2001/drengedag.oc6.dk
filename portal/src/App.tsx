@@ -1,15 +1,17 @@
 import React from "react";
-import { DefaultLayout, DefaultToastContainer, ErrorLoadingView } from "./components";
+import { DefaultLayout, DefaultToastContainer, ErrorLoadingView, SpinnerContainer } from "./components";
 import { Router } from "./routing";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PlayerController } from "./controllers";
-import { getDefaultPlayerDto, LoadState, PlayerDto } from "./models";
+import { getDefaultPlayerDto, LoadState, PlayerDto, UserInfoProps } from "./models";
 import { useLoadableState } from "./oc6";
 
 function App() {
     const { loginWithRedirect, isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
 
-    const [self, setSelf, reloadSelf] = useLoadableState<PlayerDto>(getDefaultPlayerDto(), async () => {
+    const [visible, setVisible] = React.useState<boolean>(false);
+
+    const [self, setSelf, reloadSelf] = useLoadableState<PlayerDto>(getDefaultPlayerDto(), setVisible, async () => {
         const token = await getAccessTokenSilently();
         return await PlayerController.self(token);
     });
@@ -37,16 +39,20 @@ function App() {
         }
     }
 
-    const userInfoProps = {
+    const userInfoProps: UserInfoProps = {
         self: self.value,
-        reloadSelf: async () => reloadSelf()
+        reloadSelf: async () => reloadSelf(),
+        setSpinnerVisible: (visible: boolean) => setVisible(visible)
     };
 
     return (
-        <DefaultLayout {...userInfoProps}>
-            <DefaultToastContainer />
-            {selectRender()}
-        </DefaultLayout>
+        <>
+            <SpinnerContainer visible={visible} />
+            <DefaultLayout {...userInfoProps}>
+                <DefaultToastContainer />
+                {selectRender()}
+            </DefaultLayout>
+        </>
     );
 }
 

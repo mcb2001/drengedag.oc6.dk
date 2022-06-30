@@ -12,7 +12,7 @@ export function Router(props: UserInfoProps) {
             <Route path="/self" element={<SelfPage {...props} />} />
             <Route path="/debug" element={<DebugPage {...props} />} />
 
-            {AuthenticatedRoute("/games", <GamesPage />, props.self.isAdmin)}
+            {AuthenticatedRoute("/games", <GamesPage {...props} />, props.self.isAdmin)}
             {AuthenticatedRoute("/players", <PlayersPage {...props} />, props.self.isAdmin)}
         </Routes>
     );

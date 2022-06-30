@@ -13,12 +13,6 @@ namespace Oc6.Bold.Validation
     {
         public PlayerDtoValidator()
         {
-            RuleFor(player => player.Name)
-                .NotEmpty()
-                .WithMessage("Navn kan ikke være tomt")
-                .NotNull()
-                .WithMessage("Navn kan ikke være null");
-
             RuleFor(player => player.Email)
                 .NotEmpty()
                 .WithMessage("Email kan ikke være tomt")

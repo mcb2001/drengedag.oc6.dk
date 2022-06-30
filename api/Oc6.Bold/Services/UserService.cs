@@ -91,7 +91,7 @@ namespace Oc6.Bold.Services
                 Id = default,
                 Name = name,
                 Email = email,
-                Auth0UserId = "",
+                Auth0UserId = null,
                 IsAdmin = isAdmin,
             };
 

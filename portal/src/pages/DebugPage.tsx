@@ -9,7 +9,7 @@ export function DebugPage(props: UserInfoProps): JSX.Element {
 
     const { self } = props;
     const { getAccessTokenSilently, user, getIdTokenClaims } = useAuth0();
-    const [accessToken, setAccessToken] = useLoadableState<string>("", getAccessTokenSilently);
+    const [accessToken, setAccessToken] = useLoadableState<string>("", props.setSpinnerVisible, getAccessTokenSilently);
 
     if (accessToken.state === LoadState.Success) {
         return (

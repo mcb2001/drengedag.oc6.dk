@@ -11,7 +11,7 @@ function PlayersPage(props: UserInfoProps) {
 
     const { getAccessTokenSilently } = useAuth0();
 
-    const [players, setPlayers, reloadPlayers] = useLoadableState<Array<PlayerDto>>([], async () => {
+    const [players, setPlayers, reloadPlayers] = useLoadableState<Array<PlayerDto>>([], props.setSpinnerVisible, async () => {
         const token = await getAccessTokenSilently();
         const newPlayers = await PlayerController.getAll(token);
         return [getDefaultPlayerDto(), ...newPlayers];
@@ -24,6 +24,7 @@ function PlayersPage(props: UserInfoProps) {
     async function update(player: PlayerDto): Promise<void> {
         if (player.id <= 0) {
             try {
+                props.setSpinnerVisible(true);
                 const token = await getAccessTokenSilently();
 
                 const newPlayer = await PlayerController.post({
@@ -44,9 +45,13 @@ function PlayersPage(props: UserInfoProps) {
                     value: newPlayers
                 });
 
+                props.setSpinnerVisible(false);
+
                 toast.success("Spiller " + player.name + " oprettet");
             }
             catch (err) {
+                props.setSpinnerVisible(false);
+
                 console.log(err);
 
                 reloadPlayers();
@@ -56,6 +61,8 @@ function PlayersPage(props: UserInfoProps) {
         }
         else {
             try {
+                props.setSpinnerVisible(true);
+
                 const token = await getAccessTokenSilently();
 
                 const updatedPlayer = await PlayerController.put(player, token);
@@ -72,8 +79,12 @@ function PlayersPage(props: UserInfoProps) {
                     value: updatedPlayers
                 });
 
+                props.setSpinnerVisible(false);
+
                 toast.info("Spiller " + player.name + " opdateret");
             } catch (err) {
+                props.setSpinnerVisible(false);
+
                 console.log(err);
 
                 reloadPlayers();
@@ -85,6 +96,8 @@ function PlayersPage(props: UserInfoProps) {
 
     async function deletePlayer(player: PlayerDto): Promise<void> {
         try {
+            props.setSpinnerVisible(true);
+
             const token = await getAccessTokenSilently();
 
             await PlayerController.delete(player.id, token);
@@ -93,8 +106,14 @@ function PlayersPage(props: UserInfoProps) {
                 ...players,
                 value: [...players.value.filter((p: PlayerDto) => p.id !== player.id)]
             });
+
+            props.setSpinnerVisible(false);
+
+            toast.success("Spiller slettet");
         }
         catch (err) {
+            props.setSpinnerVisible(false);
+
             console.log(err);
 
             reloadPlayers();
