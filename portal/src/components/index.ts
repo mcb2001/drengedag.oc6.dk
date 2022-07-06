@@ -7,3 +7,4 @@ export * from "./OutlinedButton";
 export * from "./InputForm";
 export * from "./Headline";
 export * from "./spinnercontainer/";
+export * from "./GameView";

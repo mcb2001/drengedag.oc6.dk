@@ -1,23 +1,26 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
-import { Headline } from "../components";
-import { HeadlineSize, UserInfoProps } from "../models";
-import { useDocTitle } from "../oc6";
+import { GameView, Headline } from "../components";
+import { GameController } from "../controllers";
+import { GameDto, getDefaultGameDto, HeadlineSize, UserInfoProps } from "../models";
+import { useDocTitle, useLoadableState } from "../oc6";
 
-export function GamesPage({ setSpinnerVisible }: UserInfoProps): JSX.Element {
+export function GamesPage(props: UserInfoProps): JSX.Element {
     useDocTitle("Spil");
 
-    function spin() {
-        setSpinnerVisible(true);
+    const { getAccessTokenSilently } = useAuth0();
 
-        window.setTimeout(() => setSpinnerVisible(false), 3400);
-    }
+    const [games, setGames, reloadGames] = useLoadableState<Array<GameDto>>([], props.setSpinnerVisible, async () => {
+        const token = await getAccessTokenSilently();
+        return await GameController.getAll(token);
+    });
 
     return (
         <>
-            <Headline size={HeadlineSize.H1}>Spil</Headline>
-            <button type="button" onClick={() => spin()}>
-                Toogle spinner
-            </button>
+            {games.value.map((game) => <GameView
+                key={game.id}
+                game={game}
+            />)}
         </>
     );
 }

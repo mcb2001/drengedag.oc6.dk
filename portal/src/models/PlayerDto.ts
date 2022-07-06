@@ -8,7 +8,7 @@ export interface PlayerDto {
     isAdmin: boolean;
 }
 
-export const getDefaultPlayerDto = () => ({
+export const getDefaultPlayerDto: () => PlayerDto = () => ({
     id: -Math.random(),
     name: "",
     email: "",

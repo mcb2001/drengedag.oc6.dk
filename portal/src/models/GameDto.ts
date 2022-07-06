@@ -6,3 +6,10 @@ export interface GameDto {
     isActive: boolean;
     teams: Array<TeamDto>;
 }
+
+export const getDefaultGameDto: () => GameDto = () => ({
+    id: -Math.random(),
+    name: "",
+    isActive: false,
+    teams: []
+});
