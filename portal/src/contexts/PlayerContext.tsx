@@ -27,15 +27,25 @@ export function PlayerContextProvider(props: IPlayerContextProps) {
     }, [players]);
 
     async function LoadPlayers(): Promise<void> {
-        const token = await getAccessTokenSilently();
+        try {
+            const token = await getAccessTokenSilently();
 
-        const value = await PlayerController.getAll(token);
+            const value = await PlayerController.getAll(token);
 
-        setPlayers({
-            ...players,
-            value,
-            state: LoadState.Success
-        });
+            setPlayers({
+                ...players,
+                value,
+                state: LoadState.Success
+            });
+
+            console.log("players loaded");
+        }
+        catch (error) {
+            setPlayers({
+                ...players,
+                state: LoadState.Error
+            });
+        }
     }
 
     switch (players.state) {
@@ -48,7 +58,7 @@ export function PlayerContextProvider(props: IPlayerContextProps) {
         case LoadState.None:
         case LoadState.Loading:
         default: {
-            return <SpinnerContainer visible={true} />;
+            return <SpinnerContainer />;
         }
     }
 }

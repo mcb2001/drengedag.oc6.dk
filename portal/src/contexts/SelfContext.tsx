@@ -3,17 +3,23 @@ import React from "react";
 import { ErrorLoadingView, SpinnerContainer } from "../components";
 import { PlayerController } from "../controllers";
 import { getDefaultPlayerDto, LoadableObject, LoadState, PlayerDto } from "../models";
-import { SpinnerContext } from "./SpinnerContext";
 
-export const SelfContext = React.createContext<PlayerDto>(getDefaultPlayerDto());
+interface ISelfContextProps {
+    self: PlayerDto;
+    reloadSelf: () => void;
+}
 
-interface ISelfContextProps extends React.PropsWithChildren {
+export const SelfContext = React.createContext<ISelfContextProps>({
+    self: getDefaultPlayerDto(),
+    reloadSelf: () => { }
+});
+
+interface ISelfContextProviderProps extends React.PropsWithChildren {
 
 }
 
-export function SelfContextProvider(props: ISelfContextProps) {
+export function SelfContextProvider(props: ISelfContextProviderProps) {
     const { getAccessTokenSilently } = useAuth0();
-    const { setSpinnerVisibility } = React.useContext(SpinnerContext);
 
     const [self, setSelf] = React.useState<LoadableObject<PlayerDto>>({
         value: getDefaultPlayerDto(),
@@ -39,6 +45,8 @@ export function SelfContextProvider(props: ISelfContextProps) {
                 value,
                 state: LoadState.Success
             });
+
+            console.log("self loaded");
         }
         catch (error) {
             setSelf({
@@ -46,8 +54,6 @@ export function SelfContextProvider(props: ISelfContextProps) {
                 state: LoadState.Error
             });
         }
-
-        setSpinnerVisibility(false);
     }
 
     switch (self.state) {
@@ -55,13 +61,20 @@ export function SelfContextProvider(props: ISelfContextProps) {
             return <ErrorLoadingView />;
         }
         case LoadState.Success: {
-            return <SelfContext.Provider value={self.value} />;
+            return <SelfContext.Provider
+                value={
+                    {
+                        self: self.value,
+                        reloadSelf: () => LoadSelf()
+                    }
+                }
+                children={props.children}
+            />;
         }
         case LoadState.None:
         case LoadState.Loading:
         default: {
-            setSpinnerVisibility(true);
-            return <></>;
+            return <SpinnerContainer />;
         }
     }
 }

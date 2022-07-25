@@ -3,12 +3,7 @@ import { AbstractController } from ".";
 
 class DefaultTeamController extends AbstractController {
     public constructor() {
-        if (process.env.NODE_ENV === "development") {
-            super("https://localhost:7155/api/team");
-        }
-        else {
-            super("/api/team");
-        }
+        super("/team");
     }
 
     public async get(token: string): Promise<TeamCreateResponse> {

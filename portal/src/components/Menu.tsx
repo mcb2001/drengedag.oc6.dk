@@ -2,12 +2,12 @@ import { faArrowRightFromBracket, faCogs, faHome, faSoccerBall, faUser, faUsers,
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { UserInfoProps } from "../models";
-import { classNames } from "../oc6";
+import { SelfContext } from "../contexts";
 
-export function Menu(props: UserInfoProps) {
+export function Menu() {
     const userLinkColor = "text-black";
-    const adminLinkColor = props.self.isAdmin ? userLinkColor : "text-gray-300";
+    const { self } = React.useContext(SelfContext);
+    const adminLinkColor = self.isAdmin ? userLinkColor : "text-gray-300";
 
     return (
         <div className="flex flex-row justify-around items-center shadow-lg flex-wrap sticky top-0 left-0 bg-white z-20">
@@ -45,7 +45,7 @@ export function Menu(props: UserInfoProps) {
                 icon={faArrowRightFromBracket}
                 text="Logout"
                 className=""
-                subText={props.self.name}
+                subText={self.name}
             />
         </div>
     );
@@ -86,9 +86,9 @@ function MenuLink({ icon, to, text, subText, colorName, className }: IMenuLinkPr
     }
 
     return (
-        <div className={classNames("inline-block", "lg:w-1/5", className)}>
+        <div className={`inline-block lg:w-1/5 ${className}`}>
             <NavLink
-                className={classNames("p-4", "text-xl", "flex", "flex-row", "justify-center", "items-center", colorName)}
+                className={`p-4 text-xl flex flex-row justify-center items-center ${colorName}`}
                 to={to}>
                 <FontAwesomeIcon
                     className=""

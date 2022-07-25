@@ -8,11 +8,26 @@ const DEFAULT_REQUEST_INIT: RequestInit = {
     referrerPolicy: "no-referrer"
 };
 
-export abstract class AbstractController {
-    protected baseUrl: string;
+const baseUrl: string = (() => {
+    switch (process.env.NODE_ENV) {
+        case "development": {
+            //development is split
+            return "https://localhost:7155/api";
+        }
+        case "test":
+        case "production":
+        default: {
+            //test, production and default should just assume same host
+            return "/api";
+        }
+    }
+})();
 
-    protected constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+export abstract class AbstractController {
+    protected url: string;
+
+    protected constructor(path: string) {
+        this.url = baseUrl + path;
     }
 
     protected getRequestInit = (method: "GET" | "POST" | "PUT" | "DELETE", token: string) => ({
@@ -34,7 +49,7 @@ export abstract class AbstractController {
     protected async getRequest<TResponse>(path: string, token: string): Promise<TResponse> {
         const requestInit: RequestInit = this.getRequestInit("GET", token);
 
-        const response: Response = await window.fetch(this.baseUrl + path, requestInit);
+        const response: Response = await window.fetch(this.url + path, requestInit);
 
         await this.isSuccessfull(response);
 
@@ -44,7 +59,7 @@ export abstract class AbstractController {
     protected async postRequest<TRequest, TResponse>(path: string, token: string, body: TRequest): Promise<TResponse> {
         const requestInit: RequestInit = this.submitRequestInit("POST", token, body);
 
-        const response: Response = await window.fetch(this.baseUrl + path, requestInit);
+        const response: Response = await window.fetch(this.url + path, requestInit);
 
         await this.isSuccessfull(response);
 
@@ -54,7 +69,7 @@ export abstract class AbstractController {
     protected async putRequest<TRequest, TResponse>(path: string, token: string, body: TRequest): Promise<TResponse> {
         const requestInit: RequestInit = this.submitRequestInit("PUT", token, body);
 
-        const response: Response = await window.fetch(this.baseUrl + path, requestInit);
+        const response: Response = await window.fetch(this.url + path, requestInit);
 
         await this.isSuccessfull(response);
 
@@ -64,7 +79,7 @@ export abstract class AbstractController {
     protected async deleteRequest(path: string, token: string): Promise<void> {
         const requestInit: RequestInit = this.getRequestInit("DELETE", token);
 
-        const response: Response = await window.fetch(this.baseUrl + path, requestInit);
+        const response: Response = await window.fetch(this.url + path, requestInit);
 
         await this.isSuccessfull(response);
     }

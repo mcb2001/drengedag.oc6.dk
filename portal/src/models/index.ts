@@ -4,6 +4,5 @@ export * from "./PlayerDto";
 export * from "./TeamCreateResponse";
 export * from "./LoadState";
 export * from "./LoadableObject";
-export * from "./UserInfoProps";
 export * from "./ButtonColor";
 export * from "./HeadlineSize";

@@ -10,7 +10,7 @@ export function DefaultLayout(props: IDefaultLayoutProps) {
 
     return (
         <div>
-            < Menu {...props} />
+            <Menu />
             <div className="flex flex-col justify-start items-center z-10">
                 <div className="container p-4" >
                     {children}
