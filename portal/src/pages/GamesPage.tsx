@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
-import { GameView, Headline } from "../components";
+import { GameView, Headline, AddNewButton } from "../components";
 import { GameController } from "../controllers";
 import { GameDto, getDefaultGameDto, HeadlineSize, UserInfoProps } from "../models";
 import { useDocTitle, useLoadableState } from "../oc6";
@@ -21,6 +21,9 @@ export function GamesPage(props: UserInfoProps): JSX.Element {
                 key={game.id}
                 game={game}
             />)}
+            <AddNewButton
+                onClick={() => { }}
+            />
         </>
     );
 }

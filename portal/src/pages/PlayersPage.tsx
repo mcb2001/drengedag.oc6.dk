@@ -1,9 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
 import { toast } from "react-toastify";
-import { EditPlayerForm, ErrorLoadingView, Headline } from "../components";
+import { EditPlayerForm, ErrorLoadingView, Headline, AddNewButton, Modal, InputForm, OutlinedButton } from "../components";
 import { PlayerController } from "../controllers";
-import { getDefaultPlayerDto, HeadlineSize, LoadState, PlayerDto, UserInfoProps } from "../models";
+import { ButtonColor, getDefaultPlayerDto, HeadlineSize, LoadState, PlayerDto, UserInfoProps } from "../models";
 import { useDocTitle, useLoadableState } from "../oc6";
 
 function PlayersPage(props: UserInfoProps) {
@@ -13,84 +13,94 @@ function PlayersPage(props: UserInfoProps) {
 
     const [players, setPlayers, reloadPlayers] = useLoadableState<Array<PlayerDto>>([], props.setSpinnerVisible, async () => {
         const token = await getAccessTokenSilently();
-        const newPlayers = await PlayerController.getAll(token);
-        return [getDefaultPlayerDto(), ...newPlayers];
+        return await PlayerController.getAll(token);
     });
+
+    const [modalVisible, setModalVisibility] = React.useState(false);
+
+    const [email, setEmail] = React.useState("");
 
     if (players.state === LoadState.Error) {
         return <ErrorLoadingView loadableObject={players} />;
     }
 
+    function addNewPlayer() {
+        setModalVisibility(true);
+    }
+
     async function update(player: PlayerDto): Promise<void> {
-        if (player.id <= 0) {
-            try {
-                props.setSpinnerVisible(true);
-                const token = await getAccessTokenSilently();
+        try {
+            props.setSpinnerVisible(true);
 
-                const newPlayer = await PlayerController.post({
-                    ...player,
-                    id: 0,
-                }, token);
+            const token = await getAccessTokenSilently();
 
-                const filteredPlayers = players.value.filter((p: PlayerDto) => p.id !== player.id);
+            const updatedPlayer = await PlayerController.put(player, token);
 
-                const newPlayers = [
-                    getDefaultPlayerDto(),
-                    newPlayer,
-                    ...filteredPlayers
-                ].sort((a: PlayerDto, b: PlayerDto) => a.id - b.id);
+            const filteredPlayers = players.value.filter((p: PlayerDto) => p.id !== player.id);
 
-                setPlayers({
-                    ...players,
-                    value: newPlayers
-                });
+            const updatedPlayers = [
+                updatedPlayer,
+                ...filteredPlayers
+            ].sort((a: PlayerDto, b: PlayerDto) => a.id - b.id);
 
-                props.setSpinnerVisible(false);
+            setPlayers({
+                ...players,
+                value: updatedPlayers
+            });
 
-                toast.success("Spiller " + player.name + " oprettet");
-            }
-            catch (err) {
-                props.setSpinnerVisible(false);
+            props.setSpinnerVisible(false);
 
-                console.log(err);
+            toast.info("Spiller " + player.name + " opdateret");
+        } catch (err) {
+            props.setSpinnerVisible(false);
 
-                reloadPlayers();
+            console.log(err);
 
-                toast.error("Spiller kunne ikke oprettes");
-            }
+            reloadPlayers();
+
+            toast.error("Spiller kunne ikke opdateres");
         }
-        else {
-            try {
-                props.setSpinnerVisible(true);
+    }
 
-                const token = await getAccessTokenSilently();
+    async function createPlayer() {
+        try {
+            const player = { ...getDefaultPlayerDto(), email: email };
 
-                const updatedPlayer = await PlayerController.put(player, token);
+            props.setSpinnerVisible(true);
+            const token = await getAccessTokenSilently();
 
-                const filteredPlayers = players.value.filter((p: PlayerDto) => p.id !== player.id);
+            const newPlayer = await PlayerController.post({
+                ...player,
+                id: 0,
+            }, token);
 
-                const updatedPlayers = [
-                    updatedPlayer,
-                    ...filteredPlayers
-                ].sort((a: PlayerDto, b: PlayerDto) => a.id - b.id);
+            const filteredPlayers = players.value.filter((p: PlayerDto) => p.id !== player.id);
 
-                setPlayers({
-                    ...players,
-                    value: updatedPlayers
-                });
+            const newPlayers = [
+                getDefaultPlayerDto(),
+                newPlayer,
+                ...filteredPlayers
+            ].sort((a: PlayerDto, b: PlayerDto) => a.id - b.id);
 
-                props.setSpinnerVisible(false);
+            setPlayers({
+                ...players,
+                value: newPlayers
+            });
 
-                toast.info("Spiller " + player.name + " opdateret");
-            } catch (err) {
-                props.setSpinnerVisible(false);
+            props.setSpinnerVisible(false);
 
-                console.log(err);
+            toast.success("Spiller " + player.name + " oprettet");
 
-                reloadPlayers();
+            setModalVisibility(false);
+        }
+        catch (err) {
+            props.setSpinnerVisible(false);
 
-                toast.error("Spiller kunne ikke opdateres");
-            }
+            console.log(err);
+
+            reloadPlayers();
+
+            toast.error("Spiller kunne ikke oprettes");
         }
     }
 
@@ -132,6 +142,27 @@ function PlayersPage(props: UserInfoProps) {
                     update={(p: PlayerDto) => update(p)}
                     delete={(p: PlayerDto) => deletePlayer(p)}
                 />)}
+            <AddNewButton
+                onClick={() => addNewPlayer()}
+            />
+            <Modal
+                onClick={() => setModalVisibility(false)}
+                visible={modalVisible}
+            >
+                <InputForm
+                    label="Email"
+                    type="text"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    readOnly={false} />
+                <OutlinedButton
+                    className="lg:w-2/12 w-full"
+                    buttonColor={ButtonColor.Lime}
+                    onClick={() => createPlayer()}
+                >
+                    Opret
+                </OutlinedButton>
+            </Modal>
         </div>
     );
 }

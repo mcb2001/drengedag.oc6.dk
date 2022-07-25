@@ -8,3 +8,5 @@ export * from "./InputForm";
 export * from "./Headline";
 export * from "./spinnercontainer/";
 export * from "./GameView";
+export * from "./AddNewButton";
+export * from "./Modal";
