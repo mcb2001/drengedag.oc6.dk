@@ -1,8 +1,11 @@
 import React from "react";
-import { UserInfoProps } from "../models";
 import { Menu } from "./Menu";
 
-export function DefaultLayout(props: UserInfoProps) {
+interface IDefaultLayoutProps extends React.PropsWithChildren {
+
+}
+
+export function DefaultLayout(props: IDefaultLayoutProps) {
     const { children } = props;
 
     return (

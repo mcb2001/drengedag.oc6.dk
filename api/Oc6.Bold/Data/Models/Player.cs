@@ -19,7 +19,7 @@ namespace Oc6.Bold.Data.Models
 
         public string? Auth0UserId { get; set; }
 
-        public List<TeamPlayer> TeamPlayers { get; set; }
+        public int Points { get; set; }
     }
 #pragma warning restore CS8618 // Non-nullable
 }

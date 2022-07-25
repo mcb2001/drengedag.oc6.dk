@@ -81,6 +81,8 @@ namespace Oc6.Bold
                 options.Audience = audience;
             });
 
+            services.AddMemoryCache();
+
             services.AddAdminPolicyAuthorization();
 
             services.AddLogging(config => config.AddConsole());
@@ -89,7 +91,6 @@ namespace Oc6.Bold
                 options.UseSqlServer(configuration.GetConnectionString(nameof(BoldContext)), config =>
                     config.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
-            services.AddScoped<GameService>();
             services.AddScoped<NameService>();
             services.AddScoped<PlayerService>();
             services.AddScoped<UserService>();

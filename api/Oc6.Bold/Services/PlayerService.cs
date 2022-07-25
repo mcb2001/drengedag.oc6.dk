@@ -14,9 +14,7 @@ namespace Oc6.Bold.Services
     public class PlayerService
     {
         public static readonly Expression<Func<Player, PlayerDto>> ToDto = p =>
-            new PlayerDto(p.Id, p.Name, p.Email, p.Auth0UserId, p.IsAdmin,
-                    p.TeamPlayers.Sum(x => x.Team.Points),
-                    p.TeamPlayers.Where(x => x.Team.Points == 1).Count());
+            new PlayerDto(p.Id, p.Name, p.Email, p.Auth0UserId, p.IsAdmin, p.Points);
 
         private readonly BoldContext context;
         private readonly NameService nameService;
@@ -47,6 +45,13 @@ namespace Oc6.Bold.Services
 
             throw new ArgumentException("Invalid state");
         }
+
+        public async Task<bool> Exists(List<int> playerIds) =>
+            await context.Players
+            .Where(x => playerIds.Contains(x.Id))
+            .CountAsync()
+            == playerIds.Count;
+
 
         public async Task<PlayerDto> GetByIdAsync(int id) =>
             await context.Players

@@ -4,7 +4,6 @@ export interface PlayerDto {
     email: string;
     auth0UserId: string | null;
     points: number;
-    wins: number;
     isAdmin: boolean;
 }
 

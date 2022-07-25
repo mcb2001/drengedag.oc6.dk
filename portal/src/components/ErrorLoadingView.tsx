@@ -1,31 +1,11 @@
-import { LoadableObject } from "../models";
+import { HeadlineSize, LoadableObject } from "../models";
+import { Headline } from "./Headline";
 
-interface IErrorLoadingViewProps<T> {
-    loadableObject: LoadableObject<T>
-}
-
-export function ErrorLoadingView<T>(props: IErrorLoadingViewProps<T>) {
-    function showDebug() {
-        if (process.env.NODE_ENV == "production") {
-            return (
-                <p>
-                    Fejl ved indlæsning. Prøv igen.
-                </p>
-            );
-        }
-        else {
-            return (
-                <p>
-                    {props.loadableObject.debug}
-                </p>
-            );
-        }
-    }
-
+export function ErrorLoadingView() {
     return (
         <div>
-            <h1>Fejl</h1>
-            {showDebug()}
+            <Headline size={HeadlineSize.H1}>Fejl</Headline>
+            <p>Fejl ved indlæsning. Prøv igen.</p>
         </div>
     );
 };

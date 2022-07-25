@@ -13,10 +13,10 @@ export function Menu(props: UserInfoProps) {
         <div className="flex flex-row justify-around items-center shadow-lg flex-wrap sticky top-0 left-0 bg-white z-20">
             <MenuLink
                 to="/"
-                colorName="userLinkColor"
-                icon={faHome}
+                colorName={adminLinkColor}
+                icon={faUsers}
                 className="border-r"
-                text="Forside"
+                text="Spillere"
             />
             <MenuLink
                 to="/games"
@@ -24,13 +24,6 @@ export function Menu(props: UserInfoProps) {
                 icon={faSoccerBall}
                 className="border-r"
                 text="Spil"
-            />
-            <MenuLink
-                to="/players"
-                colorName={adminLinkColor}
-                icon={faUsers}
-                className="border-r"
-                text="Spillere"
             />
             <MenuLink
                 to="/debug"
@@ -93,7 +86,7 @@ function MenuLink({ icon, to, text, subText, colorName, className }: IMenuLinkPr
     }
 
     return (
-        <div className={classNames("inline-block", "lg:w-1/6", className)}>
+        <div className={classNames("inline-block", "lg:w-1/5", className)}>
             <NavLink
                 className={classNames("p-4", "text-xl", "flex", "flex-row", "justify-center", "items-center", colorName)}
                 to={to}>

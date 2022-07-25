@@ -25,10 +25,6 @@ namespace Oc6.Bold.Controllers
             this.userService = userService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<PlayerDto> Get([FromRoute] int id) =>
-            await playerService.GetByIdAsync(id);
-
         [HttpGet]
         public async Task<IEnumerable<PlayerDto>> Get() =>
             await playerService.GetAsync();
@@ -47,18 +43,18 @@ namespace Oc6.Bold.Controllers
             await playerService.Create(dto.Email);
 
         [HttpPut]
+        [AdminPolicyAuthorize]
         public async Task<PlayerDto> Put([FromBody] PlayerDto dto) =>
             await playerService.Update(dto.Id, dto.Name);
 
         [HttpDelete("{id}")]
         [ProducesDefaultResponseType(typeof(void))]
+        [AdminPolicyAuthorize]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var userId = await userService.GetCurrentUserIdAsync();
-
-            if (userId == id)
+            if (await userService.GetCurrentUserIdAsync() == id)
             {
-                return BadRequest();
+                return BadRequest("Can't delete one self");
             }
 
             await playerService.Delete(id);

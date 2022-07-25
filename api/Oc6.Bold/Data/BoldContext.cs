@@ -11,12 +11,6 @@ namespace Oc6.Bold.Data
 #pragma warning disable CS8618 // Non-nullable
     public class BoldContext : DbContext
     {
-        public DbSet<Game> Games { get; set; }
-
-        public DbSet<Team> Teams { get; set; }
-
-        public DbSet<TeamPlayer> TeamPlayers { get; set; }
-
         public DbSet<Player> Players { get; set; }
 
         public BoldContext(DbContextOptions<BoldContext> options)

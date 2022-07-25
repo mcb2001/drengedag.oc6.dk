@@ -15,9 +15,13 @@ namespace Oc6.Bold.Validation
         {
             RuleFor(player => player.Email)
                 .NotEmpty()
-                .WithMessage("Email kan ikke være tomt")
+                .WithMessage("Email kan ikke være tom")
                 .NotNull()
                 .WithMessage("Email kan ikke være null");
+
+            RuleFor(player => player.Points)
+                .Must(value => value >= 0)
+                .WithMessage("Point skal være større end nul");
         }
     }
 }

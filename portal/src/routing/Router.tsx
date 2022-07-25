@@ -1,29 +1,23 @@
 import React, { Children } from "react";
 import { IndexRouteProps, LayoutRouteProps, PathRouteProps, Route, Routes, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { UserInfoProps } from "../models";
-import { LogoutPage, GamesPage, ScorePage, PlayersPage, DebugPage, SelfPage, NoAccessPage } from "../pages";
+import { LogoutPage, GamesPage, PlayersPage, DebugPage, SelfPage, NoAccessPage } from "../pages";
 
-export function Router(props: UserInfoProps) {
+export function Router() {
+    const {self} =
+
     return (
         <Routes>
             <Route path="/logout" element={<LogoutPage />} />
-            <Route path="/" element={<ScorePage {...props} />} />
-            <Route path="/self" element={<SelfPage {...props} />} />
-            <Route path="/debug" element={<DebugPage {...props} />} />
+            <Route path="/self" element={<SelfPage />} />
+            <Route path="/debug" element={<DebugPage />} />
 
-            {AuthenticatedRoute("/games", <GamesPage {...props} />, props.self.isAdmin)}
-            {AuthenticatedRoute("/players", <PlayersPage {...props} />, props.self.isAdmin)}
+            {AuthenticatedRoute("/games", <GamesPage />, props.isAdmin)}
+            {AuthenticatedRoute("/players", <PlayersPage />, props.isAdmin)}
         </Routes>
     );
 }
 
-const AuthenticatedRoute = (path: string, element: JSX.Element, isAdmin: boolean) =>
-    <Route path={path} element={isAdmin ? element : <NoAccess />} />;
-
-function NoAccess() {
-    React.useEffect(() => {
-        toast.error("Du har desværre ikke adgang til denne side");
-    });
-    return <NoAccessPage />;
+function AuthenticatedRoute(path: string, element: JSX.Element, isAdmin: boolean) {
+    return <Route path={path} element={isAdmin ? element : <NoAccessPage />} />;
 }
