@@ -2,46 +2,36 @@ import { faArrowRightFromBracket, faCogs, faHome, faSoccerBall, faUser, faUsers,
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { SelfContext } from "../contexts";
 
 export function Menu() {
-    const userLinkColor = "text-black";
-    const { self } = React.useContext(SelfContext);
-    const adminLinkColor = self.isAdmin ? userLinkColor : "text-gray-300";
-
     return (
         <div className="flex flex-row justify-around items-center shadow-lg flex-wrap sticky top-0 left-0 bg-white z-20">
             <MenuLink
                 to="/"
-                colorName={adminLinkColor}
                 icon={faUsers}
                 className="border-r"
                 text="Spillere"
             />
             <MenuLink
                 to="/games"
-                colorName={adminLinkColor}
                 icon={faSoccerBall}
                 className="border-r"
                 text="Spil"
             />
             <MenuLink
                 to="/debug"
-                colorName={userLinkColor}
                 icon={faCogs}
                 className="border-r"
                 text="DebugInfo"
             />
             <MenuLink
                 to="/self"
-                colorName="userLinkColor"
                 icon={faUser}
                 className="border-r"
                 text="Profil"
             />
             <MenuLink
                 to="/logout"
-                colorName="userLinkColor"
                 icon={faArrowRightFromBracket}
                 text="Logout"
                 className=""
@@ -56,11 +46,10 @@ interface IMenuLinkProps {
     to: string;
     text: string;
     subText?: string;
-    colorName: string;
     className: string;
 }
 
-function MenuLink({ icon, to, text, subText, colorName, className }: IMenuLinkProps) {
+function MenuLink({ icon, to, text, subText, className }: IMenuLinkProps) {
     function renderText() {
         if (subText) {
             return (
@@ -88,7 +77,7 @@ function MenuLink({ icon, to, text, subText, colorName, className }: IMenuLinkPr
     return (
         <div className={`inline-block lg:w-1/5 ${className}`}>
             <NavLink
-                className={`p-4 text-xl flex flex-row justify-center items-center ${colorName}`}
+                className="p-4 text-xl flex flex-row justify-center items-center text-black"
                 to={to}>
                 <FontAwesomeIcon
                     className=""

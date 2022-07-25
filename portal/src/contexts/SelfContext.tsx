@@ -1,17 +1,19 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import React from "react";
+import { toast } from "react-toastify";
 import { ErrorLoadingView, SpinnerContainer } from "../components";
 import { PlayerController } from "../controllers";
 import { getDefaultPlayerDto, LoadableObject, LoadState, PlayerDto } from "../models";
+import { PlayerContext } from "./PlayerContext";
 
 interface ISelfContextProps {
     self: PlayerDto;
-    reloadSelf: () => void;
+    updateSelf: (player: PlayerDto) => void;
 }
 
 export const SelfContext = React.createContext<ISelfContextProps>({
     self: getDefaultPlayerDto(),
-    reloadSelf: () => { }
+    updateSelf: () => { }
 });
 
 interface ISelfContextProviderProps extends React.PropsWithChildren {
@@ -20,6 +22,8 @@ interface ISelfContextProviderProps extends React.PropsWithChildren {
 
 export function SelfContextProvider(props: ISelfContextProviderProps) {
     const { getAccessTokenSilently } = useAuth0();
+
+    const { reloadPlayers } = React.useContext(PlayerContext);
 
     const [self, setSelf] = React.useState<LoadableObject<PlayerDto>>({
         value: getDefaultPlayerDto(),
@@ -45,15 +49,42 @@ export function SelfContextProvider(props: ISelfContextProviderProps) {
                 value,
                 state: LoadState.Success
             });
-
-            console.log("self loaded");
         }
         catch (error) {
             setSelf({
                 ...self,
                 state: LoadState.Error
             });
+
+            toast.error("Kunne ikke loade profil");
         }
+    }
+
+    async function updateSelf(player: PlayerDto): Promise<void> {
+        try {
+            const token = await getAccessTokenSilently();
+
+            const value = await PlayerController.updateSelf(player, token);
+
+            setSelf({
+                ...self,
+                value,
+                state: LoadState.Success
+            });
+
+            reloadPlayers();
+
+            toast.info("Profil opdateret");
+        }
+        catch (error) {
+            setSelf({
+                ...self,
+                state: LoadState.Error
+            });
+
+            toast.error("Kunne ikke opdatere profil");
+        }
+
     }
 
     switch (self.state) {
@@ -65,7 +96,7 @@ export function SelfContextProvider(props: ISelfContextProviderProps) {
                 value={
                     {
                         self: self.value,
-                        reloadSelf: () => LoadSelf()
+                        updateSelf: (player: PlayerDto) => updateSelf(player)
                     }
                 }
                 children={props.children}

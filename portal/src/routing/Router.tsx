@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { LogoutPage, TeamsPage, PlayersPage, DebugPage, SelfPage } from "../pages";
+import { LogoutPage, TeamsPage, PlayersPage, DebugPage, SelfPage, EditPlayerPage } from "../pages";
 
 export function Router() {
     return (
@@ -10,6 +10,7 @@ export function Router() {
             <Route path="/debug" element={<DebugPage />} />
             <Route path="/" element={<PlayersPage />} />
             <Route path="/games" element={<TeamsPage />} />
+            <Route path="/player/:id" element={<EditPlayerPage />} />
         </Routes>
     );
 }

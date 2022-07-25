@@ -4,7 +4,6 @@ import { Router } from "./routing";
 import { useAuth0 } from "@auth0/auth0-react";
 import { PlayerContextProvider, SelfContextProvider } from "./contexts";
 
-
 function App() {
     const { loginWithRedirect, isAuthenticated, isLoading, user, getAccessTokenSilently } = useAuth0();
 
@@ -15,13 +14,13 @@ function App() {
 
     return (
         <>
-            <SelfContextProvider>
-                <PlayerContextProvider >
+            <PlayerContextProvider >
+                <SelfContextProvider>
                     <DefaultLayout>
                         <Router />
                     </DefaultLayout>
-                </PlayerContextProvider>
-            </SelfContextProvider>
+                </SelfContextProvider>
+            </PlayerContextProvider>
         </>
     );
 }
